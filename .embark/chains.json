@@ -1,0 +1,14 @@
+{
+  "0x6ef4db78b962e5c3e61e9e0d36e7a03ee1cebe148200b821c7207f796b4b3e91": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0x61bAB57b9a3B7b86cA829BCEca65067529103F07"
+      },
+      "0x7049c4fe6061600dcc572637d9df777c56563fb77b6e06b871d60d8a080f8c63": {
+        "name": "Resolver",
+        "address": "0xB4A7852d40dC0FE0B3FB3BcF83c037c2504Ad39C"
+      }
+    }
+  }
+}

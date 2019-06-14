@@ -1,0 +1,9 @@
+{
+  "dappConnection": [
+    "$WEB3",
+    "ws://localhost:8546",
+    "http://localhost:8545"
+  ],
+  "dappAutoEnable": true,
+  "blockchainClient": "geth"
+}

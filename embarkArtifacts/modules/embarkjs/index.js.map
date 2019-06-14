@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/node/index.js"],"names":["module","exports","require","default"],"mappings":";;AAAAA,MAAM,CAACC,OAAP,GAAiBC,OAAO,CAAC,WAAD,CAAP,CAAqBC,OAAtC","sourcesContent":["module.exports = require('../embark').default;\n"],"file":"index.js"}
