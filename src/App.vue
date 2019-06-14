@@ -57,26 +57,22 @@
         </v-avatar>
       </v-btn>
     </v-toolbar>
+      <v-btn fab bottom right color="pink" dark fixed @click="dialog = !dialog">
+        <v-icon>lock_open</v-icon>
+      </v-btn>
+      <main>
 
-    <v-btn fab bottom right color="pink" dark fixed @click="dialog = !dialog">
-      <v-icon>lock_open</v-icon>
-    </v-btn>
-    <main>
-      <v-content>
-        <v-container fluid fill-height>
-          <v-layout justify-center align-center>
-            <router-view></router-view>
-          </v-layout>
-        </v-container>
-      </v-content>
-    </main>
+        <router-view></router-view>
+      </main>
   </v-app>
 </template>
 
 <script>
+
   export default {
     name: 'app',
-    components: {},
+    components: {
+    },
     data: () => ({
       dialog: false,
       drawer: null,
