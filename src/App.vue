@@ -22,7 +22,7 @@
               </v-list-tile>
             </template>
             <v-list-tile v-for="(child, i) in item.children" :key="i" @click="">
-              <v-list-tile-action v-if="child.icon">
+              <v-list-tile-action v-if="child.icon" :to="child.to">
                 <v-icon>{{ child.icon }}</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
@@ -32,7 +32,7 @@
               </v-list-tile-content>
             </v-list-tile>
           </v-list-group>
-          <v-list-tile v-else :key="item.text" @click="">
+          <v-list-tile :to="item.to" v-else :key="item.text" @click="">
             <v-list-tile-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-action>
@@ -57,22 +57,27 @@
         </v-avatar>
       </v-btn>
     </v-toolbar>
-      <v-btn fab bottom right color="pink" dark fixed @click="dialog = !dialog">
-        <v-icon>lock_open</v-icon>
-      </v-btn>
-      <main>
-
-        <router-view></router-view>
-      </main>
+    <v-btn fab bottom right color="pink" dark fixed @click="dialog = !dialog">
+      <v-icon>lock_open</v-icon>
+    </v-btn>
+    <main>
+      <v-content>
+        <v-container fluid fill-height>
+          <v-layout justify-center align-center>
+            <v-flex>
+              <router-view></router-view>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-content>
+    </main>
   </v-app>
 </template>
 
 <script>
-
   export default {
     name: 'app',
-    components: {
-    },
+    components: {},
     data: () => ({
       dialog: false,
       drawer: null,
@@ -82,7 +87,7 @@
         {
           icon: 'person_pin',
           text: 'Profile',
-          to: "Profile"
+          to: "/Profile"
         },
         {
           divider: true
@@ -93,13 +98,13 @@
         {
           icon: 'image_search',
           text: 'Bounties',
-          to: "Bounties"
+          to: "/Bounties"
 
         },
         {
           icon: 'add_to_queue',
           text: 'Add Bounty',
-          to: "AddBounty"
+          to: "/AddBounty"
         },
         {
           divider: true
@@ -110,7 +115,7 @@
         {
           icon: 'whatshot',
           text: 'Leaderboard',
-          to: "LeaderBoard"
+          to: "/LeaderBoard"
         },
       ]
     }),

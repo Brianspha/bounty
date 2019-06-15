@@ -477,14 +477,172 @@ __embarkENS.isAvailable = function () {
 };
 //# sourceMappingURL=embarkjs.js.map
 EmbarkJS.Names.registerProvider('ens', __embarkENS);
-var whenEnvIsLoaded = function(cb) {
-  if (typeof document !== 'undefined' && document !== null && !/comp|inter|loaded/.test(document.readyState)) {
-      document.addEventListener('DOMContentLoaded', cb);
-  } else {
-    cb();
-  }
-}
+const IpfsApi = global.IpfsApi || require('C:/Users/g14m1190/Documents/GitHub/bounty/embarkArtifacts/modules/ipfs-api');
+"use strict";
 
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
+
+var _promise = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/promise"));
+
+/*global IpfsApi*/
+const __embarkIPFS = {};
+const NoConnectionError = 'No IPFS connection. Please ensure to call Embark.Storage.setProvider()';
+
+__embarkIPFS.setProvider = function (options) {
+  const self = this;
+  return new _promise.default(function (resolve, reject) {
+    try {
+      if (!options) {
+        self._config = options;
+        self._ipfsConnection = IpfsApi('localhost', '5001');
+        self._getUrl = "http://localhost:8080/ipfs/";
+      } else {
+        const ipfsOptions = {
+          host: options.host || options.server,
+          protocol: 'http'
+        };
+
+        if (options.protocol) {
+          ipfsOptions.protocol = options.protocol;
+        }
+
+        if (options.port && options.port !== 'false') {
+          ipfsOptions.port = options.port;
+        }
+
+        self._ipfsConnection = IpfsApi(ipfsOptions);
+        self._getUrl = options.getUrl || "http://localhost:8080/ipfs/";
+      }
+
+      resolve(self);
+    } catch (err) {
+      console.error(err);
+      self._ipfsConnection = null;
+      reject(new Error('Failed to connect to IPFS'));
+    }
+  });
+};
+
+__embarkIPFS.isAvailable = function () {
+  return new _promise.default(resolve => {
+    if (!this._ipfsConnection) {
+      return resolve(false);
+    }
+
+    this._ipfsConnection.id().then(id => {
+      resolve(Boolean(id));
+    }).catch(err => {
+      console.error(err);
+      resolve(false);
+    });
+  });
+};
+
+__embarkIPFS.saveText = function (text) {
+  const self = this;
+  return new _promise.default(function (resolve, reject) {
+    if (!self._ipfsConnection) {
+      return reject(new Error(NoConnectionError));
+    }
+
+    self._ipfsConnection.add(self._ipfsConnection.Buffer.from(text), function (err, result) {
+      if (err) {
+        return reject(err);
+      }
+
+      resolve(result[0].path);
+    });
+  });
+};
+
+__embarkIPFS.get = function (hash) {
+  const self = this; // TODO: detect type, then convert if needed
+  //var ipfsHash = web3.toAscii(hash);
+
+  return new _promise.default(function (resolve, reject) {
+    if (!self._ipfsConnection) {
+      var connectionError = new Error(NoConnectionError);
+      return reject(connectionError);
+    }
+
+    self._ipfsConnection.get(hash, function (err, files) {
+      if (err) {
+        return reject(err);
+      }
+
+      resolve(files[0].content.toString());
+    });
+  });
+};
+
+__embarkIPFS.uploadFile = function (inputSelector) {
+  const self = this;
+  const file = inputSelector[0].files[0];
+
+  if (file === undefined) {
+    throw new Error('no file found');
+  }
+
+  return new _promise.default(function (resolve, reject) {
+    if (!self._ipfsConnection) {
+      return reject(new Error(NoConnectionError));
+    }
+
+    const reader = new FileReader();
+
+    reader.onloadend = function () {
+      const buffer = self._ipfsConnection.Buffer.from(reader.result);
+
+      self._ipfsConnection.add(buffer, function (err, result) {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve(result[0].path);
+      });
+    };
+
+    reader.readAsArrayBuffer(file);
+  });
+};
+
+__embarkIPFS.getUrl = function (hash) {
+  return (this._getUrl || "http://localhost:8080/ipfs/") + hash;
+};
+
+__embarkIPFS.resolve = function (name, callback) {
+  callback = callback || function () {};
+
+  if (!this._ipfsConnection) {
+    return callback(new Error(NoConnectionError));
+  }
+
+  this._ipfsConnection.name.resolve(name).then(res => {
+    callback(null, res.Path);
+  }).catch(() => {
+    callback(name + " is not registered");
+  });
+};
+
+__embarkIPFS.register = function (addr, callback) {
+  callback = callback || function () {};
+
+  if (!this._ipfsConnection) {
+    return new Error(NoConnectionError);
+  }
+
+  if (addr.length !== 46 || !addr.startsWith('Qm')) {
+    return callback('String is not an IPFS hash');
+  }
+
+  this._ipfsConnection.name.publish("/ipfs/" + addr).then(res => {
+    callback(null, res.Name);
+  }).catch(() => {
+    callback(addr + " could not be registered");
+  });
+};
+//# sourceMappingURL=embarkjs.js.map
+EmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS);
 var whenEnvIsLoaded = function(cb) {
   if (typeof document !== 'undefined' && document !== null && !/comp|inter|loaded/.test(document.readyState)) {
       document.addEventListener('DOMContentLoaded', cb);
@@ -502,7 +660,27 @@ var whenEnvIsLoaded = function(cb) {
 }
 whenEnvIsLoaded(function() {
   
-EmbarkJS.Names.setProvider('ens',{"env":"RChain","registration":{},"registryAbi":[{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"resolver","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x0178b8bf"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x02571be3"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"label","type":"bytes32"},{"name":"owner","type":"address"}],"name":"setSubnodeOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x06ab5923"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"ttl","type":"uint64"}],"name":"setTTL","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x14ab9038"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"ttl","outputs":[{"name":"","type":"uint64"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x16a25cbd"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"resolver","type":"address"}],"name":"setResolver","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x1896f70a"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"owner","type":"address"}],"name":"setOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x5b0fc9c3"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor","signature":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":true,"name":"label","type":"bytes32"},{"indexed":false,"name":"owner","type":"address"}],"name":"NewOwner","type":"event","signature":"0xce0457fe73731f824cc272376169235128c118b49d344817417c6d108d155e82"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"owner","type":"address"}],"name":"Transfer","type":"event","signature":"0xd4735d920b0f87494915f556dd9b54c8f309026070caea5c737245152564d266"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"resolver","type":"address"}],"name":"NewResolver","type":"event","signature":"0x335721b01866dc23fbee8b6b2c7b1e14d6f05c28cd35a2c934239f94095602a0"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"ttl","type":"uint64"}],"name":"NewTTL","type":"event","signature":"0x1d4f9bbfc9cab89d66e1a1562f2233ccbf1308cb4f63de2ead5787adddb8fa68"}],"registryAddress":"0x61bAB57b9a3B7b86cA829BCEca65067529103F07","registrarAbi":[{"constant":false,"inputs":[{"name":"subnode","type":"bytes32"},{"name":"owner","type":"address"}],"name":"register","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"ensAddr","type":"address"},{"name":"node","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}],"resolverAbi":[{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"key","type":"string"},{"name":"value","type":"string"}],"name":"setText","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x10f13a8c"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"},{"name":"contentTypes","type":"uint256"}],"name":"ABI","outputs":[{"name":"contentType","type":"uint256"},{"name":"data","type":"bytes"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x2203ab56"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"x","type":"bytes32"},{"name":"y","type":"bytes32"}],"name":"setPubkey","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x29cd62ea"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"content","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x2dff6941"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"addr","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x3b3b57de"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"},{"name":"key","type":"string"}],"name":"text","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x59d1d43c"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"contentType","type":"uint256"},{"name":"data","type":"bytes"}],"name":"setABI","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x623195b0"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x691f3431"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"name","type":"string"}],"name":"setName","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x77372213"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"hash","type":"bytes32"}],"name":"setContent","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0xc3d014d6"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"pubkey","outputs":[{"name":"x","type":"bytes32"},{"name":"y","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function","signature":"0xc8690233"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"addr","type":"address"}],"name":"setAddr","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0xd5fa2b00"},{"inputs":[{"name":"ensAddr","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor","signature":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"a","type":"address"}],"name":"AddrChanged","type":"event","signature":"0x52d7d861f09ab3d26239d492e8968629f95e9e318cf0b73bfddc441522a15fd2"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"hash","type":"bytes32"}],"name":"ContentChanged","type":"event","signature":"0x0424b6fe0d9c3bdbece0e7879dc241bb0c22e900be8b6c168b4ee08bd9bf83bc"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"name","type":"string"}],"name":"NameChanged","type":"event","signature":"0xb7d29e911041e8d9b843369e890bcb72c9388692ba48b65ac54e7214c4c348f7"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":true,"name":"contentType","type":"uint256"}],"name":"ABIChanged","type":"event","signature":"0xaa121bbeef5f32f5961a2a28966e769023910fc9479059ee3495d4c1a696efe3"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"x","type":"bytes32"},{"indexed":false,"name":"y","type":"bytes32"}],"name":"PubkeyChanged","type":"event","signature":"0x1d6f5e03d3f63eb58751986629a5439baee5079ff04f345becb66e23eb154e46"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"indexedKey","type":"string"},{"indexed":false,"name":"key","type":"string"}],"name":"TextChanged","type":"event","signature":"0xd8c9334b1a9c2f9da342a0a2b32629c1a229b6445dad78947f674b44444a7550"}],"resolverAddress":"0xB4A7852d40dC0FE0B3FB3BcF83c037c2504Ad39C"});
+EmbarkJS.Storage.setProviders([{"provider":"ipfs","host":"localhost","port":5001,"getUrl":"http://localhost:8080/ipfs/"}]);
 });
 
+var whenEnvIsLoaded = function(cb) {
+  if (typeof document !== 'undefined' && document !== null && !/comp|inter|loaded/.test(document.readyState)) {
+      document.addEventListener('DOMContentLoaded', cb);
+  } else {
+    cb();
+  }
+}
+whenEnvIsLoaded(function() {
+  
+EmbarkJS.Names.setProvider('ens',{"env":"development","registration":{"rootDomain":"embark.eth","subdomains":{"status":"0x1a2f3b98e434c02363f3dac3174af93c1d690914"}},"registryAbi":[{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"resolver","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x0178b8bf"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x02571be3"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"label","type":"bytes32"},{"name":"owner","type":"address"}],"name":"setSubnodeOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x06ab5923"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"ttl","type":"uint64"}],"name":"setTTL","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x14ab9038"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"ttl","outputs":[{"name":"","type":"uint64"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x16a25cbd"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"resolver","type":"address"}],"name":"setResolver","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x1896f70a"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"owner","type":"address"}],"name":"setOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x5b0fc9c3"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor","signature":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":true,"name":"label","type":"bytes32"},{"indexed":false,"name":"owner","type":"address"}],"name":"NewOwner","type":"event","signature":"0xce0457fe73731f824cc272376169235128c118b49d344817417c6d108d155e82"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"owner","type":"address"}],"name":"Transfer","type":"event","signature":"0xd4735d920b0f87494915f556dd9b54c8f309026070caea5c737245152564d266"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"resolver","type":"address"}],"name":"NewResolver","type":"event","signature":"0x335721b01866dc23fbee8b6b2c7b1e14d6f05c28cd35a2c934239f94095602a0"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"ttl","type":"uint64"}],"name":"NewTTL","type":"event","signature":"0x1d4f9bbfc9cab89d66e1a1562f2233ccbf1308cb4f63de2ead5787adddb8fa68"}],"registryAddress":"0x5d8c8d2f2A99712d111e7dadC5f9EE1830f85313","registrarAbi":[{"constant":false,"inputs":[{"name":"subnode","type":"bytes32"},{"name":"owner","type":"address"}],"name":"register","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0xd22057a9"},{"inputs":[{"name":"ensAddr","type":"address"},{"name":"node","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"constructor","signature":"constructor"}],"registrarAddress":"0xE6bdBf26557C1E33611Bb749c2Db7Da13543475b","resolverAbi":[{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"key","type":"string"},{"name":"value","type":"string"}],"name":"setText","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x10f13a8c"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"},{"name":"contentTypes","type":"uint256"}],"name":"ABI","outputs":[{"name":"contentType","type":"uint256"},{"name":"data","type":"bytes"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x2203ab56"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"x","type":"bytes32"},{"name":"y","type":"bytes32"}],"name":"setPubkey","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x29cd62ea"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"content","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x2dff6941"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"addr","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x3b3b57de"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"},{"name":"key","type":"string"}],"name":"text","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x59d1d43c"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"contentType","type":"uint256"},{"name":"data","type":"bytes"}],"name":"setABI","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x623195b0"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x691f3431"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"name","type":"string"}],"name":"setName","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x77372213"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"hash","type":"bytes32"}],"name":"setContent","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0xc3d014d6"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"pubkey","outputs":[{"name":"x","type":"bytes32"},{"name":"y","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function","signature":"0xc8690233"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"addr","type":"address"}],"name":"setAddr","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0xd5fa2b00"},{"inputs":[{"name":"ensAddr","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor","signature":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"a","type":"address"}],"name":"AddrChanged","type":"event","signature":"0x52d7d861f09ab3d26239d492e8968629f95e9e318cf0b73bfddc441522a15fd2"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"hash","type":"bytes32"}],"name":"ContentChanged","type":"event","signature":"0x0424b6fe0d9c3bdbece0e7879dc241bb0c22e900be8b6c168b4ee08bd9bf83bc"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"name","type":"string"}],"name":"NameChanged","type":"event","signature":"0xb7d29e911041e8d9b843369e890bcb72c9388692ba48b65ac54e7214c4c348f7"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":true,"name":"contentType","type":"uint256"}],"name":"ABIChanged","type":"event","signature":"0xaa121bbeef5f32f5961a2a28966e769023910fc9479059ee3495d4c1a696efe3"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"x","type":"bytes32"},{"indexed":false,"name":"y","type":"bytes32"}],"name":"PubkeyChanged","type":"event","signature":"0x1d6f5e03d3f63eb58751986629a5439baee5079ff04f345becb66e23eb154e46"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"indexedKey","type":"string"},{"indexed":false,"name":"key","type":"string"}],"name":"TextChanged","type":"event","signature":"0xd8c9334b1a9c2f9da342a0a2b32629c1a229b6445dad78947f674b44444a7550"}],"resolverAddress":"0xF3464F775667D83502AFf40C81B799fB7bb94d8C"});
+});
+"use strict";
+
+const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.hostname}:${location.port}`);
+ws.addEventListener('message', evt => {
+  if (evt.data === 'outputDone') {
+    location.reload(true);
+  }
+});
+//# sourceMappingURL=reload-on-change.js.map
 /* eslint-enable */

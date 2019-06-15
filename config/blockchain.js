@@ -48,7 +48,7 @@ module.exports = {
     ethereumClientName: "geth", // Can be geth or parity (default:geth)
     //ethereumClientBin: "geth",  // path to the client binary. Useful if it is not in the global PATH
     networkType: "custom", // Can be: testnet, rinkeby, livenet or custom, in which case, it will use the specified networkId
-    networkId: 1337, // Network id used when networkType is custom
+    networkId: 1234, // Network id used when networkType is custom
     isDev: true, // Uses and ephemeral proof-of-authority network with a pre-funded developer account, mining enabled
     datadir: ".embark/development/datadir", // Data directory for the databases and keystore (Geth 1.8.15 and Parity 2.0.4 can use the same base folder, till now they does not conflict with each other)
     mineWhenNeeded: true, // Uses our custom script (if isDev is false) to mine only when needed
@@ -63,7 +63,7 @@ module.exports = {
   // used with "embark run privatenet" and/or "embark blockchain privatenet"
   privatenet: {
     networkType: "custom",
-    networkId: 1337,
+    networkId: 1234,
     isDev: false,
     datadir: ".embark/privatenet/datadir",
     // -- mineWhenNeeded --
@@ -74,7 +74,7 @@ module.exports = {
     // in the `account > password` setting below.
     // NOTE: once `mineWhenNeeded` is enabled, you must run an `embark reset` on your dApp before running
     // `embark blockchain` or `embark run` for the first time.
-    mineWhenNeeded: true, 
+    mineWhenNeeded: true,
     // -- genesisBlock --
     // This option is only valid when mineWhenNeeded is true (which is only valid if isDev is false).
     // When enabled, geth uses POW to mine transactions as it would normally, instead of using POA as it does in --dev mode.
@@ -84,12 +84,10 @@ module.exports = {
     nodiscover: true,
     maxpeers: 0,
     proxy: true,
-    accounts: [
-      {
-        nodeAccounts: true,
-        password: "config/privatenet/password" // Password to unlock the account
-      }
-    ],
+    accounts: [{
+      nodeAccounts: true,
+      password: "config/privatenet/password" // Password to unlock the account
+    }],
     targetGasLimit: 8000000,
     simulatorBlocktime: 0
   },
@@ -97,7 +95,7 @@ module.exports = {
   privateparitynet: {
     ethereumClientName: "parity",
     networkType: "custom",
-    networkId: 1337,
+    networkId: 1234,
     isDev: false,
     genesisBlock: "config/privatenet/genesis-parity.json", // Genesis block to initiate on first creation of a development node
     datadir: ".embark/privatenet/datadir",
@@ -105,12 +103,10 @@ module.exports = {
     nodiscover: true,
     maxpeers: 0,
     proxy: true,
-    accounts: [
-      {
-        nodeAccounts: true,
-        password: "config/privatenet/password"
-      }
-    ],
+    accounts: [{
+      nodeAccounts: true,
+      password: "config/privatenet/password"
+    }],
     targetGasLimit: 8000000,
     simulatorBlocktime: 0
   },
@@ -120,27 +116,31 @@ module.exports = {
   testnet: {
     networkType: "testnet",
     syncMode: "light",
-    accounts: [
-      {
-        nodeAccounts: true,
-        password: "config/testnet/password"
-      }
-    ]
+    accounts: [{
+      nodeAccounts: true,
+      password: "config/testnet/password"
+    }]
   },
-
+  RChain: {
+    networkType: "RChain",
+    syncMode: "full",
+    rpcCorsDomain: "http://localhost:8000",
+    wsOrigins: "http://localhost:8000",
+    accounts: [{
+      nodeAccounts: true
+    }]
+  },
   // merges with the settings in default
   // used with "embark run livenet" and/or "embark blockchain livenet"
   livenet: {
     networkType: "livenet",
     syncMode: "light",
-    rpcCorsDomain: "http://localhost:8000",
-    wsOrigins: "http://localhost:8000",
-    accounts: [
-      {
-        nodeAccounts: true,
-        password: "config/livenet/password"
-      }
-    ]
+    rpcCorsDomain: "http://0.0.0.0:11000",
+    wsOrigins: "http://0.0.0.0:11000",
+    accounts: [{
+      nodeAccounts: true,
+      password: "config/livenet/password"
+    }]
   }
 
   // you can name an environment with specific settings and then specify with

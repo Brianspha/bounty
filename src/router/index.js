@@ -10,27 +10,27 @@ Vue.use(Router)
 export default new Router({
     routes: [
         {
-            path: "/",
+            path: "/bounties",
             name: "Bounties",
             component: Bounties
         },
         {
-            path: "/",
+            path: "/helloworld",
             name: "HelloWorld",
             component: HelloWorld
         },
         {
-            path: "/",
+            path: "/profile",
             name: "Profile",
             component: Profile
         },
         {
-            path: "/",
+            path: "/addbounty",
             name: "AddBounty",
             component: AddBounty
         },
         {
-            path: "/",
+            path: "/leaderboard",
             name: "LeaderBoard",
             component: LeaderBoard
         },
