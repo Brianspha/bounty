@@ -58,5 +58,281 @@
         "address": "0x9f154F4b1394fBFb97CEeF9F9E85bA766Db303B8"
       }
     }
+  },
+  "0x972406a07d7c8cddf460491d8e5f7c7d2762c536e29eb799f0fd1d62639b41b9": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0xC3AfB816d6082eaA5e6162Bd5b15490B5d555D7F"
+      },
+      "0xad8f80e58095da55fac93b88db8584c096b3ca410cba320f58a2318085f3748e": {
+        "name": "Resolver",
+        "address": "0x41C3c4b9f4808791054b0edfDcFC1f8916A97E06"
+      },
+      "0x2d43738a96be10a25ef9511905e9b0d088985c8bc9577a169066c782f0c8f57c": {
+        "name": "FIFSRegistrar",
+        "address": "0x4CF2B42358933cBF76Ca5C62644221786dE5abAf"
+      },
+      "0xbcb5e49b095997c129a2e41328cf0e82e1ff520bb6f137b879c73cf538ce304b": {
+        "name": "BountyContract",
+        "address": "0x9a8E16E5BA667c2BcD63f2e6FA436e2Be5cf400F"
+      }
+    }
+  },
+  "0x3a8fd30907ac1bd3f07fb70c14d69370eab2c7c074071499c2ef11437fb0559f": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0x99936a0c7Bd87C7AA1511e713fDcED6342C333DA"
+      },
+      "0x776720f787515e329f812ba782a5cb079f5c97fe7ed69e16b818518100cb5153": {
+        "name": "Resolver",
+        "address": "0xa9747FCD281890C902fE99E6d7D7bE967BFAF859"
+      },
+      "0xb517031945bd6f6731e3d373ef4731666324436905c94b8bd94ef397e93cb4cf": {
+        "name": "FIFSRegistrar",
+        "address": "0x59a71f40b60b924a110618310dE5A18DFDAc29E7"
+      },
+      "0xbcb5e49b095997c129a2e41328cf0e82e1ff520bb6f137b879c73cf538ce304b": {
+        "name": "BountyContract",
+        "address": "0x205780BEC990ee0C10f35bEC06838E28e1413ee1"
+      }
+    }
+  },
+  "0x15e0b53ce5608f442a1123ebcfd3615dbc8da803a4e34d40223c2816fa9b54b1": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0x9E6E9c89b43E9AD67ce16e1567EE8367903cf32b"
+      },
+      "0x6f0d27e7bf0cbae3804b74ec64fd4a4471262d65c0cb9509c682a66044740f10": {
+        "name": "Resolver",
+        "address": "0x4443AdA669108A6EfCc1818Ab11b5C6fdC8265B9"
+      },
+      "0x2543ba7e6414f418c8ad588cbeb45b6d36881491e921aa3c96ccc1e064f5b39b": {
+        "name": "FIFSRegistrar",
+        "address": "0xB9e3bc313E1a4F1f338fF545aE699E733ce7B095"
+      },
+      "0xbcb5e49b095997c129a2e41328cf0e82e1ff520bb6f137b879c73cf538ce304b": {
+        "name": "BountyContract",
+        "address": "0x61bB0A0D598B9f17f12ea8Ca91ae24F55d9Db896"
+      }
+    }
+  },
+  "0x852d70de5185210ee70497dd7869de218357013e31505b4a4799d2c924e7c506": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0xEc84eE84cCBef1c1a56df101f0e7aA8Fa1bbaedb"
+      },
+      "0x1f0a66dfa32a08780b2ddc248c039d6e0ba5dd9567ffdf74c9d2714f1b3ac423": {
+        "name": "Resolver",
+        "address": "0x4Cc4d6D6f38f244d8719581aD522184Fab33aECA"
+      },
+      "0xd9b006481ee7f621d029b793f585fb437cca5e43d71b49017491b55170f39231": {
+        "name": "FIFSRegistrar",
+        "address": "0x352C64E7826e8EBe61D3e83a0FdE37D37b818A7c"
+      },
+      "0xbcb5e49b095997c129a2e41328cf0e82e1ff520bb6f137b879c73cf538ce304b": {
+        "name": "BountyContract",
+        "address": "0x2972794785BBF2fF3EDb8E399f1FD52b5CeD0784"
+      }
+    }
+  },
+  "0xc3ad47f7754dcb418eacfde5c811dd855db3d3d7a31402e7d8ee8088292af2a1": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0x7242D259D8FC5e4f75C03eb7413413eD09269909"
+      },
+      "0x504d4c1e68266d51fc69dfe35fc3fb56e972a04e53bb10100c7f0853e8fdd0b0": {
+        "name": "Resolver",
+        "address": "0xa69901E568A1Fc511363dD538bB79251d32c8b15"
+      },
+      "0x5981ce7453dc72da4b810c3624f26fa5f6a8488117f6421251b7073955d544ee": {
+        "name": "FIFSRegistrar",
+        "address": "0x8424790E1C656cE4382cB147d622018875974B92"
+      },
+      "0x7ccb0733525e1ac2602914798be007692406adf08fc81bc2fbaf22d047130a19": {
+        "name": "BountyContract",
+        "address": "0x13629cC0549A75D0Dab5731d76Bd9c1A8826Ab67"
+      }
+    }
+  },
+  "0xdb69dabbc0f093582b200d59ad6f181383294b8965de1811cc3c4292d1c1fd9b": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0x90c2E10cD6E3BE99EE892e8709574f5F1e048520"
+      },
+      "0x3ed0dd2ce595d6d6a201f7641fb48cbdb963a2a9c329cc4fb05b58036d74e966": {
+        "name": "Resolver",
+        "address": "0x733C98b1CE0b80aF8E1E546Cd9Eb165fF793c906"
+      },
+      "0xf53797dc3d661f3e834b5fe718b9a5a8f11f2f31ff12dcde0e9b99dc2892fe0b": {
+        "name": "FIFSRegistrar",
+        "address": "0x9E4fB42d03D47AB3f7AeFF05b4eC9fEf8Ca26e32"
+      },
+      "0x7ccb0733525e1ac2602914798be007692406adf08fc81bc2fbaf22d047130a19": {
+        "name": "BountyContract",
+        "address": "0xAaa90D810B2de191c97BAceB01E235FD49311386"
+      }
+    }
+  },
+  "0x49c44211d777f876cc6e815c26795635b01f9594da8cb85388af2070b321abce": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0x4C97EF123df019DFaB6D64490131C8b6Ce289585"
+      },
+      "0xd0ac31bc1fcb2773d473732e3675f7771395b76e2a8b3715165dc0656491f1be": {
+        "name": "Resolver",
+        "address": "0x1751a5834D4229e2e6A5C41EeF1130448b161196"
+      },
+      "0x26070082de0712bd51f71158d9dbf26b4336dfd0af29b4dc730c1324aa5b95ef": {
+        "name": "FIFSRegistrar",
+        "address": "0xA47263F7b19ab1b6C4A0a66CC992f443aCD05dE1"
+      },
+      "0xe91d50b2abfdbb1cf1954b8fa1e5f7062bd8c92308b8fb7162543bacb65bdad4": {
+        "name": "BountyContract",
+        "address": "0x64b87acCBf30969C38638e465377c8CbD252CA95"
+      }
+    }
+  },
+  "0x674763b4d44a2f7c7c80e2413941567498aeb4c630f6780dfc42579417077d96": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0x68617F3c33A315A2775e0Fab64Cb585326Bb9B08"
+      },
+      "0x4dceb17632088ff5fd006c3afa28744c058fc3c16dba19690130a372a8b8a826": {
+        "name": "Resolver",
+        "address": "0x6C9329E426357A94b9c273b8950703bEbe7325d7"
+      },
+      "0x617c5263e8d65625b7bfe3507a1630bc84ba1ee8fe89373db39c0729adee44e5": {
+        "name": "FIFSRegistrar",
+        "address": "0x0fFd1EdAC90D0c991FF3CB4b98E5e4B6B25aE26C"
+      },
+      "0xf40b4d17531d36b2969f77e195958cbfa320d2e347e940804a20c1da91dace1d": {
+        "name": "BountyContract",
+        "address": "0x2D867Cdcc6B7A40CE8EF258A1cB0E1C1BE5E0552"
+      },
+      "0x0b3fc6ea7877ab74c62bad5e06be49cc46b0ccfdccc96dff85cbcb5c5de79dc0": {
+        "name": "SafeMath",
+        "address": "0x941A956fc95C32Ae3B4BF672AE5B668c72d6D17f"
+      },
+      "0x566be2601de01339c873ef95f7d559dfe7b1fdb0d849be35d013ec904f84dc52": {
+        "name": "BountyContract",
+        "address": "0x41648B391eE89B5bd8fcAf04526711D90cB4e680"
+      },
+      "0xe5f83764ab9aaa8ebf3bfcb429d5dea58aa30dde0caaf2d93aca20b031e8f3a6": {
+        "name": "BountyContract",
+        "address": "0x41648B391eE89B5bd8fcAf04526711D90cB4e680"
+      },
+      "0xfad47f70a90a20bebe34c449f3bf312948b2438ee1508d624c1164f75627109b": {
+        "name": "BountyContract",
+        "address": "0xE72F4Eba7444B53849C618Ee291C2Ced635C9236"
+      },
+      "0xc35f6fbb3bd616619de516685d3b85321e4bc0f42bc433a86ba4e9bc08706ec0": {
+        "name": "BountyContract",
+        "address": "0x8B6a50F8C2d9C86EDF1EABdf74E564A05cA7213f"
+      },
+      "0xfd5589a6f56672230cbc669746031386e960a189e3c3e55f7753dc3bb8033a20": {
+        "name": "BountyContract",
+        "address": "0xfb72f3cEd4f0a73B70a8174fe1000F0eB90fd228"
+      },
+      "0x1ab60946b4a508bb9a3b19d47aeae171f6e935010641b76dba01a5a1b5459a8b": {
+        "name": "BountyContract",
+        "address": "0xef9421F498cCDc118495B321E11dE87c762E939c"
+      },
+      "0x18310f4b621f94516f5bfa882348c477ab3abca14bbb8d60c8e17c63c6e02744": {
+        "name": "BountyContract",
+        "address": "0xAe2Bf488E072c5478c12EAb61Df7181D4c3D6C14"
+      },
+      "0xf3b9166d056ac9222f13c55d87a2222bf29281ab0db88b0bdb2a1b5b499de857": {
+        "name": "BountyContract",
+        "address": "0xF850D0690c7152bbCDed2aC2F5Ed53B165C34d11"
+      },
+      "0x212988b29418df65f6b1c21d97b6dc53e122532d8c8e2580f28de6d636a33a2d": {
+        "name": "BountyContract",
+        "address": "0x32f2Df094166514e36e1C185AC8F81f8EA75a62d"
+      },
+      "0x9f1baa7d682a1d63c5a8d39edb490557c12dc34f15f1977bda0f6d94be635af4": {
+        "name": "BountyContract",
+        "address": "0x64C849aE535b7f4182140B67aB26f2317b75E292"
+      },
+      "0x1bbb4ee5a506e301d00dc14b646e7f383a6495da1e45e206a152aeb7613620d7": {
+        "name": "BountyContract",
+        "address": "0x6C4Fcf2bB814BFF4445386c2Ea26413013a6759e"
+      },
+      "0xf4d86a49fb1546b8845d1af0ef36b7b7f9c1c732142ff0a2622ed7ca8fbfd1cc": {
+        "name": "BountyContract",
+        "address": "0x6B3a0D546D21505d66E0691b007AABeEb908768f"
+      },
+      "0xc405a0c63eaedc0e1f50efd73182df12e4c8f97843b1f3bb3fcf123b86b77d86": {
+        "name": "BountyContract",
+        "address": "0xc870484BB229885a161D059aa698Fa70bCab343C"
+      },
+      "0x4ae1fba09233176fb682fc8fdefae0fd38826248621184efc3807bbf523be032": {
+        "name": "BountyContract",
+        "address": "0x875Ff1CEF795CECee1e57f0355aE0931eFaa1031"
+      },
+      "0x85ea332aef4ff4ffbd77e8f1aae43354a5569c2be55116addafbd466fcc74766": {
+        "name": "BountyContract",
+        "address": "0xd52348Cb33B603D89558ffb49815B165aA621511"
+      },
+      "0xe08d0fdd4cc8015e7a9e5ad51c06962d4c401045a66e2ac974bab257358ab1ec": {
+        "name": "BountyContract",
+        "address": "0x020d797d5A9F138E70d8032c596d309Be9382574"
+      }
+    }
+  },
+  "0xc8806862ecd5ee817e3e959bc5783a35165d4e271616ed96dc9b8ea548e3b745": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0x698eec581c098f39eDFf8BB6C84FA42fB1a66504"
+      },
+      "0x08d15e8823a274351991fa9be5923c9fd5f63fbae1636e805a8258c95584d0fb": {
+        "name": "Resolver",
+        "address": "0x0A265330d182C5B84a4232DC2209b63BBc03573f"
+      },
+      "0x01093b3e100ad3320c78cdf0c1dbba38b2f53b159b6eebed25227505738f8056": {
+        "name": "FIFSRegistrar",
+        "address": "0x9F1D847aC378F064E8B2f0451272ed64D2257823"
+      }
+    }
+  },
+  "0x42e22f9ac5d06b703ae50ff762c72cdb7df5c6ff67547dd2cab1f355a148a051": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0x9Bc5e4DC75ABD037BF7180E750cD11f4972e98C3"
+      },
+      "0xc28f7984ed8132d12c1c7f9b1f5de3d0e46508361070c2329cbf7e54a09e190b": {
+        "name": "Resolver",
+        "address": "0xF1Ab06a64C6bd16A99D0388943b0329ABFf4FaeD"
+      },
+      "0x38810f84bfc44865fe2d87119ed487066e2fed35f8d78c41d3027a0f6f753202": {
+        "name": "FIFSRegistrar",
+        "address": "0xd7a591077aA15D703d290e2A2097AFcFC4C70f1b"
+      }
+    }
+  },
+  "0x6e2d419850616693bf6910fef80acf23b5386023a3a4c4b6fcaf8cdfb882b376": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0x07fC9D4231feb7756DC76A75983F549A6Ef78b24"
+      },
+      "0xde7651ce168303a2b4b8039c62952cb5898bf7773bb3f2775936b76413b978bb": {
+        "name": "Resolver",
+        "address": "0x74E44a4647e332063bb63055d3ee25834Db2a502"
+      },
+      "0x88bb257eab1fd00e4d810dfcb20be5a0ea61af862b2e31eddd37c28491fb5384": {
+        "name": "FIFSRegistrar",
+        "address": "0xbd31f19c63872379F50C1b8adC8514463b06dF3A"
+      }
+    }
   }
 }
