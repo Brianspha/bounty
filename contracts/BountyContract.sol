@@ -64,7 +64,7 @@ contract BountyContract {
     }
 
     /*=================================== @dev event definition code start===================================*/
-
+    event bountyIdLogger(bytes indexed Id);
     /*=================================== @dev contract variable code start===================================*/
 
     address owner;
@@ -90,7 +90,7 @@ contract BountyContract {
     }
 
     /*===================================Bounty Functions code start===================================*/
-    function addBounty(bytes memory title, bytes memory description, bytes memory category, uint endDate, uint difficulty) public payable returns(bytes memory) {
+    function addBounty(bytes memory title, bytes memory description, bytes memory category, uint endDate, uint difficulty) public payable {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
         require(endDate > 0, "End date for bounty not valid");
@@ -109,7 +109,7 @@ contract BountyContract {
         bounties[id].submissions = 0;
         bounties[id].paused = false;
         bounties[id].category = category;
-        return id;
+        emit bountyIdLogger(id);
     }
 
     function bountyExists(bytes memory bountyId) public view returns(bool) {

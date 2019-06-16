@@ -20,25 +20,25 @@ config({
 });
 
 contract("BountyContract", function () {
-this.timeout(0);
+  this.timeout(0);
 
-it("should register a new user", async function () {
-  let result = await BountyContract.methods.registerUser().call();
-  assert.strictEqual(result, true);
-});
-it("should check if user exists", async function () {
-  let result = BountyContract.methods.userExists().call();
-  assert(result, true);
-});
-it("should add a new bounty", async function () {
-  let bountyId = await BountyContract.methods.addBounty(web3.utils.toHex("Build Website"), web3.utils.toHex("some description"), web3.utils.toHex("some categories"), 12345, 4).call({
-    value: 10
-  })
-})
-  it("should check if a bounty exists", async function () {
-    let result = await BountyContract.methods.bountyExists(bountyId).call();
+  it("should register a new user", async function () {
+    let result = await BountyContract.methods.registerUser().send();
+    //assert.strictEqual(result, true);
+  });
+  it("should check if user exists", async function () {
+    let result = BountyContract.methods.userExists().call();
     assert(result, true);
+  });
+  it("should add a new bounty and check if it exists", async function () {
+      let bountyId = await BountyContract.methods.addBounty(web3.utils.toHex("Build Website"), web3.utils.toHex("some description"), web3.utils.toHex("some categories"), 12345, 4).send({value: 10})
+      bountyId = bountyId.events.bountyIdLogger.returnValues.Id;
+      console.log(bountyId)
+      let result = await BountyContract.methods.bountyExists(bountyId).call();
+      console.log(result)
+      assert(result, true);
   })
+
   it("should add upload a solution to ipfs and return a receipt ", async function () {
     EmbarkJS.Storage.saveText("hello world").then(solutionHash => {
       it("it should check if a bounty exists", async function () {
