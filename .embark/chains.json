@@ -199,7 +199,7 @@
       },
       "0x0b3fc6ea7877ab74c62bad5e06be49cc46b0ccfdccc96dff85cbcb5c5de79dc0": {
         "name": "SafeMath",
-        "address": "0x941A956fc95C32Ae3B4BF672AE5B668c72d6D17f"
+        "address": "0x2D867Cdcc6B7A40CE8EF258A1cB0E1C1BE5E0552"
       },
       "0x566be2601de01339c873ef95f7d559dfe7b1fdb0d849be35d013ec904f84dc52": {
         "name": "BountyContract",
@@ -259,7 +259,7 @@
       },
       "0x85ea332aef4ff4ffbd77e8f1aae43354a5569c2be55116addafbd466fcc74766": {
         "name": "BountyContract",
-        "address": "0xd52348Cb33B603D89558ffb49815B165aA621511"
+        "address": "0x941A956fc95C32Ae3B4BF672AE5B668c72d6D17f"
       },
       "0xe08d0fdd4cc8015e7a9e5ad51c06962d4c401045a66e2ac974bab257358ab1ec": {
         "name": "BountyContract",
@@ -312,6 +312,22 @@
       "0x88bb257eab1fd00e4d810dfcb20be5a0ea61af862b2e31eddd37c28491fb5384": {
         "name": "FIFSRegistrar",
         "address": "0xbd31f19c63872379F50C1b8adC8514463b06dF3A"
+      }
+    }
+  },
+  "0xd0cac6477b8e0ce827e100ada9c8dd59889d0d0b7d0df0d3172caac69c24669d": {
+    "contracts": {
+      "0x3043b04ad856d169c8f0b0509c0bc63192dc7edd92d6933c58708298a0e381be": {
+        "name": "ENSRegistry",
+        "address": "0xE88cCb2eCC510B9688d92F734BCb527198c28C5d"
+      },
+      "0x1133320361173d1843b2bc226396e7766148f4460f2457cb9ba2788705b530b6": {
+        "name": "Resolver",
+        "address": "0xca913c6abe6452Dd8911d7fB84088414222C6d21"
+      },
+      "0x03c981b3bba66edfa2fe64d11c7c009e760667d580a9e3ea5130f1fc531dce23": {
+        "name": "FIFSRegistrar",
+        "address": "0x27b330c88FA4d232Ee259dBa418ff98B42f3319a"
       }
     }
   }
