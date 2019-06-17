@@ -41,7 +41,7 @@ module.exports = {
     // Default value is true.
     // dappAutoEnable: true,
 
-    gas: "auto",
+    gas: "8000000",
 
     // Strategy for the deployment of the contracts:
     // - implicit will try to deploy all the contracts located inside the contracts directory
@@ -52,10 +52,8 @@ module.exports = {
     //strategy: 'implicit',
 
     contracts: {
-      // example:
-      //SimpleStorage: {
-      //  args: [ 100 ]
-      //}
+      "BountyContract": {
+      }
     }
   },
 

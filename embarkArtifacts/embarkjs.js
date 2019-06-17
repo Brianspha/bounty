@@ -70,251 +70,7 @@ if (!global.__Web3) {
   const web3ConnectionConfig = require('C:/Users/g14m1190/Documents/GitHub/bounty/embarkArtifacts/config/blockchain.json');
   EmbarkJS.Blockchain.connect(web3ConnectionConfig, (err) => {if (err) { console.error(err); } });
 }
-"use strict";
-
-var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
-
-var _stringify = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/json/stringify"));
-
-/* global module require */
-const {
-  fromEvent,
-  merge,
-  throwError
-} = require('rxjs');
-
-const {
-  map,
-  mergeMap
-} = require('rxjs/operators');
-
-function sendMessage(options, callback) {
-  let topics, ttl, payload;
-  topics = options.topic;
-  const data = options.data;
-  ttl = options.ttl || 100;
-  const powTime = options.powTime || 3;
-  const powTarget = options.powTarget || 0.5;
-  const sig = options.sig;
-  const fromAscii = options.fromAscii;
-  const toHex = options.toHex;
-  const symKeyID = options.symKeyID;
-  const post = options.post;
-
-  if (topics) {
-    topics = toHex(topics).slice(0, 10);
-  }
-
-  payload = (0, _stringify.default)(data);
-  let message = {
-    sig: sig,
-    // signs the message using the keyPair ID
-    ttl: ttl,
-    payload: fromAscii(payload),
-    powTime: powTime,
-    powTarget: powTarget
-  };
-
-  if (topics) {
-    message.topic = topics;
-  }
-
-  if (options.pubKey) {
-    message.pubKey = options.pubKey; // encrypt using a given pubKey
-  } else if (options.symKeyID) {
-    message.symKeyID = options.symKeyID; // encrypts using given sym key ID
-  } else {
-    message.symKeyID = symKeyID; // encrypts using the sym key ID
-  }
-
-  if (topics === undefined && message.symKeyID && !message.pubKey) {
-    callback("missing option: topic");
-  } else {
-    post(message, callback);
-  }
-}
-
-function listenTo(options) {
-  let topics = options.topic;
-  const toAscii = options.toAscii;
-  const toHex = options.toHex;
-  const sig = options.sig;
-  const subscribe = options.subscribe;
-  const symKeyID = options.symKeyID;
-  let subOptions = {};
-
-  if (topics) {
-    if (typeof topics === 'string') {
-      topics = [toHex(topics).slice(0, 10)];
-    } else {
-      topics = topics.map(t => toHex(t).slice(0, 10));
-    }
-
-    subOptions.topics = topics;
-  }
-
-  if (options.minPow) {
-    subOptions.minPow = options.minPow;
-  }
-
-  if (options.usePrivateKey === true) {
-    subOptions.privateKeyID = options.privateKeyID || sig;
-  } else {
-    subOptions.symKeyID = symKeyID;
-  }
-
-  const emitter = subscribe('messages', subOptions);
-  const obsData = fromEvent(emitter, 'data').pipe(map(result => ({
-    data: JSON.parse(toAscii(result.payload)),
-    payload: result.payload,
-    recipientPublicKey: result.recipientPublicKey,
-    result,
-    sig: result.sig,
-    time: result.timestamp,
-    topic: toAscii(result.topic)
-  })));
-  const obsErr = fromEvent(emitter, 'error').pipe(mergeMap(throwError));
-  const obsSub = merge(obsData, obsErr);
-  obsSub.shhSubscription = emitter;
-  return obsSub;
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    sendMessage,
-    listenTo
-  };
-}
-//# sourceMappingURL=communicationFunctions.js.map
-"use strict";
-
-var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
-
-var _promise = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/promise"));
-
-var _assign = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/assign"));
-
-/* global EmbarkJS Web3 listenTo sendMessage */
-// for the whisper v5 and web3.js 1.0
-let __embarkWhisperNewWeb3 = {};
-
-__embarkWhisperNewWeb3.setProvider = function (options) {
-  const self = this;
-  let provider;
-
-  if (options === undefined) {
-    provider = "localhost:8546";
-  } else {
-    provider = options.server + ':' + options.port;
-  } // TODO: take into account type
-
-
-  self.web3 = new Web3(new Web3.providers.WebsocketProvider("ws://" + provider, options.providerOptions));
-  self.web3.currentProvider.on('connect', () => {
-    self.getWhisperVersion(function (err, version) {
-      if (err) {
-        console.log("whisper not available");
-      } else if (version >= 5) {
-        self.web3.shh.newSymKey().then(id => {
-          self.symKeyID = id;
-        });
-        self.web3.shh.newKeyPair().then(id => {
-          self.sig = id;
-        });
-      } else {
-        throw new Error("version of whisper not supported");
-      }
-
-      self.whisperVersion = self.web3.version.whisper;
-    });
-  });
-  self.web3.currentProvider.on('error', () => {
-    console.log("whisper not available");
-  });
-};
-
-__embarkWhisperNewWeb3.sendMessage = function (options) {
-  const data = options.data || options.payload;
-
-  if (!data) {
-    throw new Error("missing option: data");
-  }
-
-  (0, _assign.default)(options, {
-    sig: this.sig,
-    fromAscii: EmbarkJS.Utils.fromAscii,
-    toHex: this.web3.utils.toHex,
-    symKeyID: options.symKeyID || this.symKeyID,
-    post: this.web3.shh.post,
-    data
-  });
-  sendMessage(options, err => {
-    if (err) {
-      throw new Error(err);
-    }
-  });
-};
-
-__embarkWhisperNewWeb3.listenTo = function (options) {
-  (0, _assign.default)(options, {
-    toAscii: EmbarkJS.Utils.toAscii,
-    toHex: this.web3.utils.toHex,
-    sig: this.sig,
-    subscribe: this.web3.shh.subscribe,
-    symKeyID: options.symKeyID || this.symKeyID
-  });
-  return listenTo(options);
-};
-
-__embarkWhisperNewWeb3.getWhisperVersion = function (cb) {
-  // 1) Parity does not implement shh_version JSON-RPC method
-  // 2) web3 1.0 still does not implement web3_clientVersion
-  // so we must do all by our own
-  const self = this;
-
-  self.web3._requestManager.send({
-    method: 'web3_clientVersion',
-    params: []
-  }, (err, clientVersion) => {
-    if (err) return cb(err);
-
-    if (clientVersion.indexOf("Parity-Ethereum//v2") === 0) {
-      // This is Parity
-      self.web3.shh.getInfo(function (err) {
-        if (err) {
-          return cb(err, 0);
-        } // TOFIX Assume Whisper v6 until there's a way to understand it via JSON-RPC
-
-
-        return cb(err, 6);
-      });
-    } else {
-      // Assume it is a Geth compliant client
-      self.web3.shh.getVersion(function (err, version) {
-        cb(err, version);
-      });
-    }
-  });
-};
-
-__embarkWhisperNewWeb3.isAvailable = function () {
-  return new _promise.default((resolve, reject) => {
-    if (!this.web3.shh) {
-      return resolve(false);
-    }
-
-    try {
-      this.getWhisperVersion(err => {
-        resolve(Boolean(!err));
-      });
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
-//# sourceMappingURL=embarkjs.js.map
-EmbarkJS.Messages.registerProvider('whisper', __embarkWhisperNewWeb3);
-const namehash = global.namehash || require('C:/Users/Siphamandla/Documents/GitHub/bounty/embarkArtifacts/modules/eth-ens-namehash');"use strict";
+const namehash = global.namehash || require('C:/Users/g14m1190/Documents/GitHub/bounty/embarkArtifacts/modules/eth-ens-namehash');"use strict";
 
 /*global namehash*/
 // Price of ENS registration contract functions
@@ -721,6 +477,180 @@ __embarkENS.isAvailable = function () {
 };
 //# sourceMappingURL=embarkjs.js.map
 EmbarkJS.Names.registerProvider('ens', __embarkENS);
+const IpfsApi = global.IpfsApi || require('C:/Users/g14m1190/Documents/GitHub/bounty/embarkArtifacts/modules/ipfs-api');
+"use strict";
+
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
+
+var _promise = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/promise"));
+
+/*global IpfsApi*/
+const __embarkIPFS = {};
+const NoConnectionError = 'No IPFS connection. Please ensure to call Embark.Storage.setProvider()';
+
+__embarkIPFS.setProvider = function (options) {
+  const self = this;
+  return new _promise.default(function (resolve, reject) {
+    try {
+      if (!options) {
+        self._config = options;
+        self._ipfsConnection = IpfsApi('localhost', '5001');
+        self._getUrl = "http://localhost:8080/ipfs/";
+      } else {
+        const ipfsOptions = {
+          host: options.host || options.server,
+          protocol: 'http'
+        };
+
+        if (options.protocol) {
+          ipfsOptions.protocol = options.protocol;
+        }
+
+        if (options.port && options.port !== 'false') {
+          ipfsOptions.port = options.port;
+        }
+
+        self._ipfsConnection = IpfsApi(ipfsOptions);
+        self._getUrl = options.getUrl || "http://localhost:8080/ipfs/";
+      }
+
+      resolve(self);
+    } catch (err) {
+      console.error(err);
+      self._ipfsConnection = null;
+      reject(new Error('Failed to connect to IPFS'));
+    }
+  });
+};
+
+__embarkIPFS.isAvailable = function () {
+  return new _promise.default(resolve => {
+    if (!this._ipfsConnection) {
+      return resolve(false);
+    }
+
+    this._ipfsConnection.id().then(id => {
+      resolve(Boolean(id));
+    }).catch(err => {
+      console.error(err);
+      resolve(false);
+    });
+  });
+};
+
+__embarkIPFS.saveText = function (text) {
+  const self = this;
+  return new _promise.default(function (resolve, reject) {
+    if (!self._ipfsConnection) {
+      return reject(new Error(NoConnectionError));
+    }
+
+    self._ipfsConnection.add(self._ipfsConnection.Buffer.from(text), function (err, result) {
+      if (err) {
+        return reject(err);
+      }
+
+      resolve(result[0].path);
+    });
+  });
+};
+
+__embarkIPFS.get = function (hash) {
+  const self = this; // TODO: detect type, then convert if needed
+  //var ipfsHash = web3.toAscii(hash);
+
+  return new _promise.default(function (resolve, reject) {
+    if (!self._ipfsConnection) {
+      var connectionError = new Error(NoConnectionError);
+      return reject(connectionError);
+    }
+
+    self._ipfsConnection.get(hash, function (err, files) {
+      if (err) {
+        return reject(err);
+      }
+
+      resolve(files[0].content.toString());
+    });
+  });
+};
+
+__embarkIPFS.uploadFile = function (inputSelector) {
+  const self = this;
+  const file = inputSelector[0].files[0];
+
+  if (file === undefined) {
+    throw new Error('no file found');
+  }
+
+  return new _promise.default(function (resolve, reject) {
+    if (!self._ipfsConnection) {
+      return reject(new Error(NoConnectionError));
+    }
+
+    const reader = new FileReader();
+
+    reader.onloadend = function () {
+      const buffer = self._ipfsConnection.Buffer.from(reader.result);
+
+      self._ipfsConnection.add(buffer, function (err, result) {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve(result[0].path);
+      });
+    };
+
+    reader.readAsArrayBuffer(file);
+  });
+};
+
+__embarkIPFS.getUrl = function (hash) {
+  return (this._getUrl || "http://localhost:8080/ipfs/") + hash;
+};
+
+__embarkIPFS.resolve = function (name, callback) {
+  callback = callback || function () {};
+
+  if (!this._ipfsConnection) {
+    return callback(new Error(NoConnectionError));
+  }
+
+  this._ipfsConnection.name.resolve(name).then(res => {
+    callback(null, res.Path);
+  }).catch(() => {
+    callback(name + " is not registered");
+  });
+};
+
+__embarkIPFS.register = function (addr, callback) {
+  callback = callback || function () {};
+
+  if (!this._ipfsConnection) {
+    return new Error(NoConnectionError);
+  }
+
+  if (addr.length !== 46 || !addr.startsWith('Qm')) {
+    return callback('String is not an IPFS hash');
+  }
+
+  this._ipfsConnection.name.publish("/ipfs/" + addr).then(res => {
+    callback(null, res.Name);
+  }).catch(() => {
+    callback(addr + " could not be registered");
+  });
+};
+//# sourceMappingURL=embarkjs.js.map
+EmbarkJS.Storage.registerProvider('ipfs', __embarkIPFS);
+var whenEnvIsLoaded = function(cb) {
+  if (typeof document !== 'undefined' && document !== null && !/comp|inter|loaded/.test(document.readyState)) {
+      document.addEventListener('DOMContentLoaded', cb);
+  } else {
+    cb();
+  }
+}
+
 var whenEnvIsLoaded = function(cb) {
   if (typeof document !== 'undefined' && document !== null && !/comp|inter|loaded/.test(document.readyState)) {
       document.addEventListener('DOMContentLoaded', cb);
@@ -730,7 +660,7 @@ var whenEnvIsLoaded = function(cb) {
 }
 whenEnvIsLoaded(function() {
   
-EmbarkJS.Messages.setProvider('whisper', {"server":"localhost","port":8546,"type":"ws"});
+EmbarkJS.Storage.setProviders([{"provider":"ipfs","host":"localhost","port":5001,"getUrl":"http://localhost:8080/ipfs/"}]);
 });
 
 var whenEnvIsLoaded = function(cb) {
@@ -740,17 +670,9 @@ var whenEnvIsLoaded = function(cb) {
     cb();
   }
 }
-
-var whenEnvIsLoaded = function(cb) {
-  if (typeof document !== 'undefined' && document !== null && !/comp|inter|loaded/.test(document.readyState)) {
-      document.addEventListener('DOMContentLoaded', cb);
-  } else {
-    cb();
-  }
-}
 whenEnvIsLoaded(function() {
   
-EmbarkJS.Names.setProvider('ens',{"env":"development","registration":{"rootDomain":"embark.eth","subdomains":{"status":"0x1a2f3b98e434c02363f3dac3174af93c1d690914"}},"registryAbi":[{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"resolver","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x0178b8bf"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x02571be3"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"label","type":"bytes32"},{"name":"owner","type":"address"}],"name":"setSubnodeOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x06ab5923"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"ttl","type":"uint64"}],"name":"setTTL","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x14ab9038"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"ttl","outputs":[{"name":"","type":"uint64"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x16a25cbd"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"resolver","type":"address"}],"name":"setResolver","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x1896f70a"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"owner","type":"address"}],"name":"setOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x5b0fc9c3"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor","signature":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":true,"name":"label","type":"bytes32"},{"indexed":false,"name":"owner","type":"address"}],"name":"NewOwner","type":"event","signature":"0xce0457fe73731f824cc272376169235128c118b49d344817417c6d108d155e82"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"owner","type":"address"}],"name":"Transfer","type":"event","signature":"0xd4735d920b0f87494915f556dd9b54c8f309026070caea5c737245152564d266"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"resolver","type":"address"}],"name":"NewResolver","type":"event","signature":"0x335721b01866dc23fbee8b6b2c7b1e14d6f05c28cd35a2c934239f94095602a0"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"ttl","type":"uint64"}],"name":"NewTTL","type":"event","signature":"0x1d4f9bbfc9cab89d66e1a1562f2233ccbf1308cb4f63de2ead5787adddb8fa68"}],"registryAddress":"0x68617F3c33A315A2775e0Fab64Cb585326Bb9B08","registrarAbi":[{"constant":false,"inputs":[{"name":"subnode","type":"bytes32"},{"name":"owner","type":"address"}],"name":"register","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0xd22057a9"},{"inputs":[{"name":"ensAddr","type":"address"},{"name":"node","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"constructor","signature":"constructor"}],"registrarAddress":"0x0fFd1EdAC90D0c991FF3CB4b98E5e4B6B25aE26C","resolverAbi":[{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"key","type":"string"},{"name":"value","type":"string"}],"name":"setText","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x10f13a8c"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"},{"name":"contentTypes","type":"uint256"}],"name":"ABI","outputs":[{"name":"contentType","type":"uint256"},{"name":"data","type":"bytes"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x2203ab56"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"x","type":"bytes32"},{"name":"y","type":"bytes32"}],"name":"setPubkey","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x29cd62ea"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"content","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x2dff6941"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"addr","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x3b3b57de"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"},{"name":"key","type":"string"}],"name":"text","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x59d1d43c"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"contentType","type":"uint256"},{"name":"data","type":"bytes"}],"name":"setABI","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x623195b0"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function","signature":"0x691f3431"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"name","type":"string"}],"name":"setName","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x77372213"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"hash","type":"bytes32"}],"name":"setContent","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0xc3d014d6"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"pubkey","outputs":[{"name":"x","type":"bytes32"},{"name":"y","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function","signature":"0xc8690233"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"addr","type":"address"}],"name":"setAddr","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0xd5fa2b00"},{"inputs":[{"name":"ensAddr","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor","signature":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"a","type":"address"}],"name":"AddrChanged","type":"event","signature":"0x52d7d861f09ab3d26239d492e8968629f95e9e318cf0b73bfddc441522a15fd2"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"hash","type":"bytes32"}],"name":"ContentChanged","type":"event","signature":"0x0424b6fe0d9c3bdbece0e7879dc241bb0c22e900be8b6c168b4ee08bd9bf83bc"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"name","type":"string"}],"name":"NameChanged","type":"event","signature":"0xb7d29e911041e8d9b843369e890bcb72c9388692ba48b65ac54e7214c4c348f7"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":true,"name":"contentType","type":"uint256"}],"name":"ABIChanged","type":"event","signature":"0xaa121bbeef5f32f5961a2a28966e769023910fc9479059ee3495d4c1a696efe3"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"x","type":"bytes32"},{"indexed":false,"name":"y","type":"bytes32"}],"name":"PubkeyChanged","type":"event","signature":"0x1d6f5e03d3f63eb58751986629a5439baee5079ff04f345becb66e23eb154e46"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"indexedKey","type":"string"},{"indexed":false,"name":"key","type":"string"}],"name":"TextChanged","type":"event","signature":"0xd8c9334b1a9c2f9da342a0a2b32629c1a229b6445dad78947f674b44444a7550"}],"resolverAddress":"0x6C9329E426357A94b9c273b8950703bEbe7325d7"});
+EmbarkJS.Names.setProvider('ens',{"env":"RChain","registration":{},"registryAbi":[{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"resolver","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"label","type":"bytes32"},{"name":"owner","type":"address"}],"name":"setSubnodeOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"ttl","type":"uint64"}],"name":"setTTL","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"ttl","outputs":[{"name":"","type":"uint64"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"resolver","type":"address"}],"name":"setResolver","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"owner","type":"address"}],"name":"setOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":true,"name":"label","type":"bytes32"},{"indexed":false,"name":"owner","type":"address"}],"name":"NewOwner","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"owner","type":"address"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"resolver","type":"address"}],"name":"NewResolver","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"ttl","type":"uint64"}],"name":"NewTTL","type":"event"}],"registryAddress":"0x949740903f97917B8dF192bA46b30D4728D1e6e2","registrarAbi":[{"constant":false,"inputs":[{"name":"subnode","type":"bytes32"},{"name":"owner","type":"address"}],"name":"register","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"ensAddr","type":"address"},{"name":"node","type":"bytes32"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}],"resolverAbi":[{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"key","type":"string"},{"name":"value","type":"string"}],"name":"setText","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"},{"name":"contentTypes","type":"uint256"}],"name":"ABI","outputs":[{"name":"contentType","type":"uint256"},{"name":"data","type":"bytes"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"x","type":"bytes32"},{"name":"y","type":"bytes32"}],"name":"setPubkey","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"content","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"addr","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"},{"name":"key","type":"string"}],"name":"text","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"contentType","type":"uint256"},{"name":"data","type":"bytes"}],"name":"setABI","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"name","type":"string"}],"name":"setName","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"hash","type":"bytes32"}],"name":"setContent","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"node","type":"bytes32"}],"name":"pubkey","outputs":[{"name":"x","type":"bytes32"},{"name":"y","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"node","type":"bytes32"},{"name":"addr","type":"address"}],"name":"setAddr","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"ensAddr","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"a","type":"address"}],"name":"AddrChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"hash","type":"bytes32"}],"name":"ContentChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"name","type":"string"}],"name":"NameChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":true,"name":"contentType","type":"uint256"}],"name":"ABIChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"x","type":"bytes32"},{"indexed":false,"name":"y","type":"bytes32"}],"name":"PubkeyChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"node","type":"bytes32"},{"indexed":false,"name":"indexedKey","type":"string"},{"indexed":false,"name":"key","type":"string"}],"name":"TextChanged","type":"event"}],"resolverAddress":"0xB09c1BC95bfa5d06BA0C8B5dbC80e3E2E01311AE"});
 });
 
 /* eslint-enable */
