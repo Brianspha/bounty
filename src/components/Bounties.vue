@@ -1,10 +1,10 @@
 <template>
-    <v-container grid-list-md text-xs-center >
+    <v-container grid-list-md text-xs-center>
         <v-layout align-space-between justify-start column fill-height>
             <v-btn color="white" light @click.stop="dialog = true"> Filter</v-btn>
             <v-layout align-center justify-center row fill-height>
                 <v-dialog v-model="dialog">
-                    <v-card app-data="true" id="increaseHeight">
+                    <v-card v-if="dialog" app-data="true" id="increaseHeight">
                         <v-card-title class="headline">Refine By</v-card-title>
                         <v-container fluid grid-list-xl>
                             <v-layout wrap align-center>
@@ -31,6 +31,27 @@
                             </v-btn>
                         </v-card-actions>
                     </v-card>
+
+                </v-dialog>
+                <v-dialog v-model="descriptionDialogue">
+                    <v-card>
+                        <v-container fluid>
+                            <v-layout wrap>
+                                <v-flex xs12>
+                                    <v-card-title class="headline">Description</v-card-title>
+                                    <v-card-text>
+                                        {{description}}
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="primary" flat @click="descriptionDialogue = false">
+                                            I accept
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                    </v-card>
                 </v-dialog>
             </v-layout>
             <v-flex v-for="bounty in Postedbounties" xs12>
@@ -47,7 +68,7 @@
                             <div class="text-xs-center">
                                 <v-chip small v-for="tag in bounty.Tags">&nbsp; {{tag}}</v-chip>
                             </div>
-                            <v-card-text class="px-0">{{bounty. Description }}</v-card-text>
+                            <v-card-text class="px-0"></v-card-text>
                         </div>
                         <v-layout align-center justify-end column reverse fill-height>
                             <span class="group pa-2">
@@ -71,11 +92,15 @@
                         </v-layout>
                     </v-card-title>
                     <v-card-actions>
+                        <v-btn flat color="black" @click="descriptionDialogue=true; description=bounty.Description">view
+                        </v-btn>
+
                         <v-spacer></v-spacer>
-                        <v-btn flat color="black">Submit</v-btn>
+                        <v-btn v-if="loggedIn" flat color="black">Submit</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-flex>
+
         </v-layout>
         <InfiniteLoading @infinite="getBounties" spinner="waveDots">
         </InfiniteLoading>
@@ -87,6 +112,7 @@
     import MugenScroll from 'vue-mugen-scroll'
     import Multiselect from 'vue-multiselect'
     import InfiniteLoading from 'vue-infinite-loading';
+    import Vue from 'vue';
 
     export default {
         name: "Bounties",
@@ -103,24 +129,33 @@
                 Stage: ["Active", "Completed", "Dead"],
                 Sort: ["Recent", "Expiry", "Value:Low to High"],
                 Category: ["Html", "CSS", "JS", "MS", "A", "S", "D", "G", "GG"],
+                loggedIn: false,
+                descriptionDialogue: false,
+                description: "No desription"
 
             }
         },
         methods: {
             getBounties($state) {
-                for (var i = 0; i < 10; i++) {
-                    this.Postedbounties.push({
-                        Heading: "Some Heading",
-                        Description: "Some Description",
-                        Difficulty: "Some Difficulty",
-                        Remaining: 0,
-                        Submissions: 0,
-                        Offering: 0,
-                        Fiat: "R " + 0,
-                        Tags: ["Tag1", "Tag2", "Tag3"]
-                    })
-                    $state.loaded();
-                }
+                Vue.axios.get("https://api.myjson.com/bins/135rv1").then((response) => {
+                    console.log(response.data)
+                    for (var index = 0; index < response.data.length; index++) {
+                        var data = response.data[index]
+                        console.log(data)
+                        this.Postedbounties.push({
+                            Heading: data.title,
+                            Description: data.description,
+                            Difficulty: data.difficulty == 1 ? "Begginner" : data.difficulty == 2 ?
+                                "Intermediate" : data.difficulty == 3 ? "Experienced" : "Extreme",
+                            Remaining: data.endDate,
+                            Submissions: data.submissions,
+                            Offering: data.offering,
+                            Fiat: "R " + data.fiat,
+                            Tags: data.category
+                        })
+                        $state.loaded();
+                    }
+                })
                 $state.complete();
 
             }
@@ -130,9 +165,9 @@
             Multiselect,
             InfiniteLoading
         }
+    }
 
-
-
+    function getBountyData() {
 
     }
 </script>

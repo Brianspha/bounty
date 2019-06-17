@@ -1,4 +1,4 @@
-pragma solidity 0.5 .9;
+pragma solidity >= 0.5 .0;
 import "../contracts/libraries/SafeMath.sol";
 
 //@dev contract definition
@@ -133,7 +133,7 @@ contract BountyContract {
     function rejectSolution(bytes32 bountyId) public returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
-        require(bounties[bountyId].active, "Bounty already expired");
+        require(bounties[bountyId].active, "Bounty already expired or is not registered");
         require(!bounties[bountyId].paused, "Bounty cannot reject offers as there is/are a pending issues with the bounty poster");
         users[msg.sender].rejectedBounties.push(bountyId);
         return true;
@@ -142,6 +142,7 @@ contract BountyContract {
     function acceptSolution(bytes32 bountyId) public returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
+        require(bounties[bountyId].poster == msg.sender, "Only owner of the Bounty is allowed to accept solutions");
         require(bounties[bountyId].active, "Bounty already expired");
         require(!bounties[bountyId].paused, "Bounty cannot accept offers as there is/are a pending issues with the bounty poster");
 
@@ -156,13 +157,13 @@ contract BountyContract {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
         require(!bounties[bountyId].paused, "Bounty cannot be turned off as there is/are a pending issues with the bounty poster");
-        return bounties[bountyId].active;
+        return !bounties[bountyId].active;
     }
 
     function pauseBounty(bytes32 bountyId) public onlyOwnwer returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
-        require(bounties[bountyId].active, "Bounty already expired");
+        require(bounties[bountyId].active, "Bounty already paused");
         require(!bounties[bountyId].paused, "Bounty cannot be turned off as there is/are a pending issues with the bounty poster");
         bounties[bountyId].paused = true;
         return true;
@@ -171,8 +172,8 @@ contract BountyContract {
     function endDispute(bytes32 bountyId) public onlyOwnwer returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
-        require(bounties[bountyId].active, "Bounty already expired");
-        require(!bounties[bountyId].paused, "Bounty dispute already resolved");
+        require(bounties[bountyId].active, "Bounty not in dispute");
+        require(bounties[bountyId].paused, "Bounty dispute already resolved");
         bounties[bountyId].paused = false;
         return true;
     }

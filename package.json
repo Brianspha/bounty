@@ -23,6 +23,8 @@
     "style-loader": "^0.23.1",
     "url-loader": "^1.1.2",
     "vue": "^2.6.10",
+    "vue-async-data": "^1.0.2",
+    "vue-axios": "^2.1.4",
     "vue-infinite-loading": "^2.4.4",
     "vue-material": "^1.0.0-beta-11",
     "vue-mugen-scroll": "^0.2.5",
