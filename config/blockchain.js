@@ -48,7 +48,7 @@ module.exports = {
     ethereumClientName: "geth", // Can be geth or parity (default:geth)
     //ethereumClientBin: "geth",  // path to the client binary. Useful if it is not in the global PATH
     networkType: "custom", // Can be: testnet, rinkeby, livenet or custom, in which case, it will use the specified networkId
-    networkId: 1234, // Network id used when networkType is custom
+    networkId: 1337, // Network id used when networkType is custom
     isDev: true, // Uses and ephemeral proof-of-authority network with a pre-funded developer account, mining enabled
     datadir: ".embark/development/datadir", // Data directory for the databases and keystore (Geth 1.8.15 and Parity 2.0.4 can use the same base folder, till now they does not conflict with each other)
     mineWhenNeeded: true, // Uses our custom script (if isDev is false) to mine only when needed
@@ -63,7 +63,7 @@ module.exports = {
   // used with "embark run privatenet" and/or "embark blockchain privatenet"
   privatenet: {
     networkType: "custom",
-    networkId: 1234,
+    networkId: 1337,
     isDev: false,
     datadir: ".embark/privatenet/datadir",
     // -- mineWhenNeeded --
@@ -95,7 +95,7 @@ module.exports = {
   privateparitynet: {
     ethereumClientName: "parity",
     networkType: "custom",
-    networkId: 1234,
+    networkId: 1337,
     isDev: false,
     genesisBlock: "config/privatenet/genesis-parity.json", // Genesis block to initiate on first creation of a development node
     datadir: ".embark/privatenet/datadir",
@@ -121,22 +121,14 @@ module.exports = {
       password: "config/testnet/password"
     }]
   },
-  RChain: {
-    networkType: "RChain",
-    syncMode: "full",
-    rpcCorsDomain: "http://localhost:8000",
-    wsOrigins: "http://localhost:8000",
-    accounts: [{
-      nodeAccounts: true
-    }]
-  },
+
   // merges with the settings in default
   // used with "embark run livenet" and/or "embark blockchain livenet"
   livenet: {
     networkType: "livenet",
     syncMode: "light",
-    rpcCorsDomain: "http://0.0.0.0:11000",
-    wsOrigins: "http://0.0.0.0:11000",
+    rpcCorsDomain: "http://localhost:8000",
+    wsOrigins: "http://localhost:8000",
     accounts: [{
       nodeAccounts: true,
       password: "config/livenet/password"

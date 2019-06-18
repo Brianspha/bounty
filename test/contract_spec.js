@@ -1,4 +1,4 @@
-const BountyContract = require('Embark/contracts/BountyContract');
+const BountyContract = require('Embark/contracts/Bounty');
 const EmbarkJS = require('Embark/EmbarkJS')
 let accounts;
 
@@ -11,7 +11,7 @@ config({
   //  ]
   //},
   contracts: {
-    "BountyContract": {}
+    "Bounty": {}
   }
 }, (_err, web3_accounts) => {
   accounts = web3_accounts
@@ -21,13 +21,13 @@ contract("BountyContract Deploy", async () => {
   let bountyId = '';
   let solutionHash = '';
   it("should register a new user", async () => {
-    let result = await BountyContract.methods.registerUser().send({});
+    let result = await BountyContract.methods.registerUser().send({from:accounts[1]});
+    console.log(result.from)
   });
   it("should check if user exists", async () => {
     let result = await BountyContract.methods.userExists().call();
     assert.strictEqual(result, true);
   });
-
 
   it("should add a new bounty", async () => {
     bountyId = await BountyContract.methods.addBounty(web3.utils.fromAscii("Build Website"), web3.utils.fromAscii("some description"), web3.utils.fromAscii("some categories"), 12345, 4).send({

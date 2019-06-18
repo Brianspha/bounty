@@ -6,6 +6,7 @@
     "images/": ["app/images/**"],
     "index.html": "app/index.html"
   },  
+  "webpack.config.js":"webpack.config.js",
   "buildDir": "dist/",
   "config": "config/",
   "versions": {

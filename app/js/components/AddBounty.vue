@@ -48,8 +48,8 @@
   import Vue from 'vue';
   import {
     BountyContract
-  } from "../../../embarkArtifacts/contracts/BountyContract";
-  import { web3 } from "../../../embarkArtifacts/embarkjs";
+  } from "Embark/contracts/Bounty";
+  import { web3 } from "Embark/EmbarkJS";
   export default {
     data: () => ({
       valid: true,

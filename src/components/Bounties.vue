@@ -68,7 +68,10 @@
                             <div class="text-xs-center">
                                 <v-chip small v-for="tag in bounty.Tags">&nbsp; {{tag}}</v-chip>
                             </div>
-                            <v-card-text class="px-0"></v-card-text>
+                            <v-card-actions class="pa-3">
+                                <v-icon color="black" x-small>perm_identity</v-icon>
+                                <v-card-text class="px-0">{{bounty.Poster}}</v-card-text>
+                            </v-card-actions>
                         </div>
                         <v-layout align-center justify-end column reverse fill-height>
                             <span class="group pa-2">
@@ -151,7 +154,8 @@
                             Submissions: data.submissions,
                             Offering: data.offering,
                             Fiat: "R " + data.fiat,
-                            Tags: data.category
+                            Tags: data.category,
+                            Poster: data.poster
                         })
                         $state.loaded();
                     }

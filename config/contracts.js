@@ -41,7 +41,7 @@ module.exports = {
     // Default value is true.
     // dappAutoEnable: true,
 
-    gas: "8000000",
+    gas: "auto",
 
     // Strategy for the deployment of the contracts:
     // - implicit will try to deploy all the contracts located inside the contracts directory
@@ -52,8 +52,10 @@ module.exports = {
     //strategy: 'implicit',
 
     contracts: {
-      "BountyContract": {
-      }
+      // example:
+      //SimpleStorage: {
+      //  args: [ 100 ]
+      //}
     }
   },
 
@@ -81,15 +83,7 @@ module.exports = {
   // used with "embark run livenet"
   livenet: {
   },
-  RChain: {
-    deployment: {
-      host: "146.231.123.137",
-      port: "11000",
-      protocol: 'http',
-      type: "rpc"
-    },
- 
-  }
+
   // you can name an environment with specific settings and then specify with
   // "embark run custom_name" or "embark blockchain custom_name"
   //custom_name: {
