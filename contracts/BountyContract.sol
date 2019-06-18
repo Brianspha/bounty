@@ -13,6 +13,7 @@ contract BountyContract {
      @atr Bounties represents the ids of all the bounties the user has completed
      @active indicates if the user is active or not
      @atr suspended indicates if the user is suspended or not
+     @atr ranking indicates the users ranking 
      */
     struct User {
         address id;
@@ -22,6 +23,7 @@ contract BountyContract {
         bytes32[] postedBounties;
         bool active;
         bool suspended;
+        uint256 ranking;
     }
 
     /**
@@ -68,6 +70,7 @@ contract BountyContract {
     /*=================================== @dev contract variable code start===================================*/
 
     address owner;
+    address [] userKeys;
     mapping(address => User) users;
     mapping(bytes32 => Bounty) bounties;
     //@dev constructor
@@ -81,9 +84,18 @@ contract BountyContract {
         users[msg.sender].active = true;
         users[msg.sender].suspended = false;
         users[msg.sender].earnings = 0;
+        users[msg.sender].ranking = 0;
+        userKeys.push(msg.sender);
         return true;
     }
-
+    function updateUserRanking(uint256 rank,address user) public onlyOwnwer returns(bool){
+        require(msg.sender != address(0), "Invalid sender address");
+        require(user != address(0), "Invalid user address");
+        require(!users[user].active, "User already registered");
+        require(rank>0 ,"Invalid ranking paramter rank must be greater than 0");
+        users[user].ranking=rank;
+        return true;
+    }
     function userExists() public view returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
         return users[msg.sender].active;
