@@ -6,7 +6,7 @@
       hint="Descrition of what you want done be thorough as possible" required></v-textarea>
     <v-layout wrap align-center>
       <v-flex xs12 sm6 d-flex>
-        <v-select :items="difficulty" label="Difficulty"></v-select>
+        <v-select :items="difficulty"  label="Difficulty"></v-select>
       </v-flex>
     </v-layout>
     <v-combobox v-model="chips" :items="items" label="Category" chips clearable multiple>
@@ -45,10 +45,8 @@
 </template>
 
 <script>
-  import Vue from 'vue';
-  import {
-    BountyContract
-  } from "../../embarkArtifacts/contracts/Bounty";
+import EmbarkJs  from "../../embarkArtifacts/embarkjs";
+import EmbarkJS from '../../embarkArtifacts/embarkjs';
   export default {
     data: () => ({
       valid: true,
@@ -57,7 +55,6 @@
         v => !!v || 'Title is required',
         v => (v && v.length >= 3) || 'Title must be greater than 3 characters'
       ],
-      description: '',
       descriptionRules: [
         v => !!v || 'Description is required',
         v => (v && v.length >= 20) || 'Description must be greater than 20 characters'
@@ -67,12 +64,6 @@
         v => (v && parseInt(v) > 0) || 'Offering must be greater than 0 Eth'
       ],
       select: null,
-      items: [
-        'Item 1',
-        'Item 2',
-        'Item 3',
-        'Item 4'
-      ],
       checkbox: false,
       chips: [],
       items: [], //@dev get all available categories on platform,
@@ -81,20 +72,37 @@
       description: '',
       offering: '',
       difficulty: ['Begginner', 'Intermediate', 'Hard', 'Extreme'],
-      web3:web3
+      web3:null,
+      BountyContract:null
     }),
-
+    mounted(){
+      this.init()
+    },
     methods: {
       validate() {
         if (this.$refs.form.validate()) {
           this.snackbar = true
-          console.log(this.web3)
-          //BountyContract.methods.addBounty(web3.utils.fromAscii(this.title),web3.utils.fromAscii(this.description),web3.utils.fromAscii(this.chips.join()),this.offering,this.difficulty);
-
+          this.$log.debug(this.select)
+          this.BountyContract.methods.addBounty(this.web3.Utils.fromAscii(this.title),
+          this.web3.Utils.fromAscii(this.description),
+          this.web3.Utils.fromAscii(this.chips.join()),new Date(this.date).getTime(),parseInt(this.difficulty)).send({value:this.offering}).then((val,err)=>{
+            if(err){
+              this.$log.debug(err)
+            }
+            else{
+              this.$log.debug(val)
+            }
+          });
         }
-          console.log(this.web3)
-        console.log("date: " + this.date.toString())
-
+          this.$log.debug(this.web3)
+        this.$log.debug("date: " + this.date.toString())
+      },
+      init:async function(){
+        EmbarkJs.onReady((err)=>{
+          this.$log.debug(err)
+          this.web3=EmbarkJS;
+          this.BountyContract=require("../../embarkArtifacts/contracts/Bounty").default
+        })
       },
       reset() {
         this.$refs.form.reset()

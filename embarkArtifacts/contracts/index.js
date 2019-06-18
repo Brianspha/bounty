@@ -1,5 +1,5 @@
 module.exports = {
-"SafeMath": require('./SafeMath').default,
 "Bounty": require('./Bounty').default,
+"SafeMath": require('./SafeMath').default,
 
 };

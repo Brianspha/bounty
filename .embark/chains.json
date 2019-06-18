@@ -38,5 +38,17 @@
         "address": "0x661685C1ED9727f15985a1019f8eFF0554D6e894"
       }
     }
+  },
+  "0x5161c7d6484b376cb669260d423215229a0e3bafe66d984855e475dae78cc09e": {
+    "contracts": {
+      "0xfd54641220cb84b79b7a7bbd7a5ec1b7c836f4d3df06d037c36f269a87da9e29": {
+        "name": "Bounty",
+        "address": "0x30f09709B14475e4df023965e923FF6491500618"
+      },
+      "0xf5af372ef7722d64f3acf031d00019cb577229af4dc137ceed1be9c8d0e681cf": {
+        "name": "SafeMath",
+        "address": "0xE505EeC701Cff78959c9732eE8CA83d2EFF8C441"
+      }
+    }
   }
 }
