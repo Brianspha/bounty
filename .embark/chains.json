@@ -26,5 +26,17 @@
         "address": "0x317017daEEDCD3E0432D2419BcA08aaB66A62d5F"
       }
     }
+  },
+  "0x291932a0e872770d6cf516f1b22c66114335cf786c7a5933008b26cb3029a37a": {
+    "contracts": {
+      "0x4c9a32b5f9590923bccbd6ff7a02f231ab404229e9bca5d6305479bd5d70d538": {
+        "name": "SafeMath",
+        "address": "0x1564c0a995f98F3F77d6B1Fb30d27963B7Bc52e7"
+      },
+      "0x5a217dcb839166e82885f839fde35d8bc1fca930d29f0d0c72cf5c0e30ff9b60": {
+        "name": "Bounty",
+        "address": "0x661685C1ED9727f15985a1019f8eFF0554D6e894"
+      }
+    }
   }
 }
