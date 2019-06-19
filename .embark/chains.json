@@ -48,6 +48,14 @@
       "0xf5af372ef7722d64f3acf031d00019cb577229af4dc137ceed1be9c8d0e681cf": {
         "name": "SafeMath",
         "address": "0xE505EeC701Cff78959c9732eE8CA83d2EFF8C441"
+      },
+      "0xd3121ae19fc1234d94ae1209c7a60302f46934a94a0d9f519530a5a0f34ad51e": {
+        "name": "BountyContract",
+        "address": "0xd798896a6248277905a0906549DBD55A3A35A0F4"
+      },
+      "0xbba42b816c3d1f480171e4caeb9e79d07712731c35acf74f79c7b086ea49dfb5": {
+        "name": "BountyContract",
+        "address": "0x30f09709B14475e4df023965e923FF6491500618"
       }
     }
   }

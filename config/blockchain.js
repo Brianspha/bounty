@@ -1,6 +1,7 @@
 module.exports = {
   // applies to all environments
   default: {
+    targetGasLimit: 8000000,
     enabled: true,
     rpcHost: "localhost", // HTTP-RPC server listening interface (default: "localhost")
     rpcPort: 8545, // HTTP-RPC server listening port (default: 8545)

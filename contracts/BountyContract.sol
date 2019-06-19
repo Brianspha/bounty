@@ -2,7 +2,7 @@ pragma solidity ^0.5.9;
 import "../contracts/libraries/SafeMath.sol";
 
 //@dev contract definition
-contract Bounty {
+contract BountyContract {
     using SafeMath
     for uint256;
     /*=================================== @dev structs definition code start===================================*/
