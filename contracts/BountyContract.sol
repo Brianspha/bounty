@@ -1,4 +1,4 @@
-pragma solidity ^0.5.9;
+pragma solidity ^ 0.5 .9;
 import "../contracts/libraries/SafeMath.sol";
 
 //@dev contract definition
@@ -40,7 +40,11 @@ contract BountyContract {
     @atr poster the poster of the bounty
     @atr paused in the instance where theres a dispute this atribute will be activated
     @atr category represents the category/categories the bounty falls under
+    @atr BountyHunters addresses of all the Bounty Hunters who have submitted solutions
+    @atr proposedSolutions the hash to the solution stored on IPFS
+    @atr winner represents the Bounty whos solution was accepted
     @notice poster atr cannot be used as an id as user may have multiple bounties posted looping may be costly
+    *A Bounty hunter can post as many solutions as possible only the lastest solution will be accepted
      */
     struct Bounty {
         bytes id;
@@ -55,6 +59,8 @@ contract BountyContract {
         bool active;
         address poster;
         bytes[] proposedSolutions;
+        address[] BountyHunters;
+        address winner;
         bool paused;
     }
 
@@ -174,7 +180,7 @@ contract BountyContract {
         return !bounties[bountyId].active;
     }
 
-    function pauseBounty(bytes32 bountyId) public onlyOwnwer returns(bool) {
+    function pauseBounty(bytes32 bountyId) public returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
         require(bounties[bountyId].active, "Bounty already paused");

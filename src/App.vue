@@ -75,12 +75,61 @@
 </template>
 
 <script>
+  import EmbarkJs from "../embarkArtifacts/embarkjs";
+  import $ from "jquery";
+  import Vue from 'vue';
   export default {
     name: 'app',
+    methods: {
+      init: async function () {
+        EmbarkJs.onReady((err) => {
+          this.$log.debug(err)
+          this.web3 = EmbarkJS;
+          this.BountyContract = require("../embarkArtifacts/contracts/BountyContract").default
+        })
+      },
+      updateBounties() {
+        Vue.axios.get("https://api.myjson.com/bins/135rv1").then((response) => {
+          this.$log.debug(response.data);
+          for (var i = 0; i < response.data.length; i++) {
+            let data = response.data[i];
+            if (data.poster == "") {
+              this.BountyContract.methods.addBounty(this.web3.Utils.fromAscii(data.title),
+                this.web3.Utils.fromAscii(data.description), this.web3.Utils.fromAscii(data.title),
+                this.web3.Utils.fromAscii(data.category.join()), this.web3.Utils.fromAscii(parseInt(data.endDate)),
+                this.web3.Utils.fromAscii(parseInt(data.difficulty))).send({
+                value: data.offering
+              }).then((val, err) => {
+                if (err) {
+                  this.$log.debug(err)
+                } else {
+                  this.$log.debug(val);
+                  data.poster = val.from;
+                  $.ajax({
+                    url: "https://api.myjson.com/bins/135rv1",
+                    type: "PUT",
+                    data: data,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data, textStatus, jqXHR) {}
+                  });
+                }
+              })
+            }
+          }
+        })
+      }
+    },
+    mounted() {
+      this.init();
+      this.updateBounties()
+    },
     components: {},
     data: () => ({
       dialog: false,
       drawer: null,
+      web3: null,
+      BountyContract: null,
       items: [{
           heading: 'Personal'
         },
