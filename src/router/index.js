@@ -1,28 +1,25 @@
 import Bounties from "../components/Bounties.vue";
 import Router from 'vue-router';
-import Profile from '../components/Profile.vue'
-import HelloWorld from "../components/HelloWorld.vue";
+import Pending from "../components/PendingBounties.vue";
 import AddBounty from "../components/AddBounty.vue";
-import LeaderBoard from "../components/LeaderBoard.vue";
+import Disputes from "../components/Disputes.vue";
+import Created from "../components/AddedBounties.vue";
 
 import Vue from "vue"
 Vue.use(Router)
 export default new Router({
-    routes: [
-        {
+    routes: [{
+            path: "/",
+            redirect: "bounties"
+        }, {
             path: "/bounties",
             name: "Bounties",
             component: Bounties
         },
         {
-            path: "/helloworld",
-            name: "HelloWorld",
-            component: HelloWorld
-        },
-        {
-            path: "/profile",
-            name: "Profile",
-            component: Profile
+            path: "/disputes",
+            name: "Disputes",
+            component: Disputes
         },
         {
             path: "/addbounty",
@@ -30,10 +27,15 @@ export default new Router({
             component: AddBounty
         },
         {
-            path: "/leaderboard",
-            name: "LeaderBoard",
-            component: LeaderBoard
-        },
+            path: "/createdBounties",
+            name: "CreatedBounties",
+            component: Created
+        }, 
+        {
+            path: "/pendingBounties",
+            name: "PendingBounties",
+            component: Pending
+        }
 
     ],
     mode: "history"

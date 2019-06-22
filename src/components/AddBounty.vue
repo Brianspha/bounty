@@ -17,6 +17,10 @@
       </template>
     </v-combobox>
     <v-text-field v-model="offering" :counter="100" :rules="offeringRules" label="Offering" required></v-text-field>
+    <v-checkbox v-model="token" label="Pledge token"></v-checkbox>
+    <v-text-field v-if="token" v-model="tokenAddress" :counter="42" :rules="tokenAdressRule" label="Token Address"
+      required>
+    </v-text-field>
 
     <v-flex xs12 sm6 md4>
       <v-dialog ref="dialog" :return-value.sync="date" persistent lazy full-width width="290px">
@@ -30,10 +34,8 @@
         </v-date-picker>
       </v-dialog>
     </v-flex>
-
     <v-checkbox v-model="checkbox" :rules="[v => !!v || 'You must agree to continue!']"
       label="Agree to terms and conditions?" required></v-checkbox>
-
     <v-btn :disabled="!valid" color="success" @click="validate">
       Submit
     </v-btn>
@@ -41,25 +43,31 @@
     <v-btn color="white" @click="reset">
       Reset Form
     </v-btn>
-    <loading :active.sync="isLoading" :can-cancel="true" :on-cancel="onCancel" :is-full-page="fullPage" :loader="bars">
+    <loading :active.sync="isLoading" :can-cancel="false" :is-full-page="fullPage">
     </loading>
   </v-form>
 </template>
 
 <script>
-  import EmbarkJs from "../../embarkArtifacts/embarkjs";
+  import EmbarkJS from "../../embarkArtifacts/embarkjs";
   import Loading from 'vue-loading-overlay';
   // Import stylesheet
   import 'vue-loading-overlay/dist/vue-loading.css';
   import Swal from 'sweetalert2'
+  import SecureLS from 'secure-ls'
 
   export default {
     components: {
       Loading
     },
     data: () => ({
+      tokenAddress: "",
+      token: false,
       valid: true,
       name: '',
+      tokenAdressRule: [v => !!v || 'Token address is required and cannot be null',
+        v => (v && v.length == 42) || 'Token address must be 42 characters long'
+      ],
       titleRules: [
         v => !!v || 'Title is required',
         v => (v && v.length >= 3) || 'Title must be greater than 3 characters'
@@ -84,7 +92,10 @@
       web3: null,
       BountyContract: null,
       selectedDifficulty: null,
-      isLoading: false
+      isLoading: false,
+      fullPage: true,
+      address: "",
+      SecureLS: new SecureLS()
     }),
     mounted() {
       this.init()
@@ -95,23 +106,60 @@
           this.isLoading = true;
           this.snackbar = true
           this.$log.debug(this.selectedDifficulty)
-          this.BountyContract.methods.addBounty(this.web3.Utils.fromAscii(this.title),
-            this.web3.Utils.fromAscii(this.description),
-            this.web3.Utils.fromAscii(this.chips.join()), new Date(this.date).getTime(), this.difficultyToInt(this
-              .selectedDifficulty)).send({
-            value: this.offering,
-            gas: 5000000
-          }).then((val, err) => {
-            if (err) {
-              this.$log.debug(err)
-              this.error("OH no something went wrong wont you try again :D")
-            } else {
-              this.success("Successfully submitted Bounty please see if it appears under the bounties section of the platform")
-              this.$log.debug(val)
-            }
-            this.isLoading = false;
+          if (this.token) {
+            this.BountyContract.methods.addBountyOfferToken(
+              this.web3.Utils.fromAscii(this.title),
+              this.web3.Utils.fromAscii(this.description),
+              this.web3.Utils.fromAscii(this.chips.join()),
+              new Date(this.date).getTime(),
+              this.difficultyToInt(this.selectedDifficulty), this.tokenAddress, this.offering).send({
+              gas: 5000000
+            }).then((val, err) => {
+              if (err) {
+                this.error("OH no something went wrong wont you try again :D")
+              } else {
+                this.success(
+                  "Successfully submitted Bounty please see if it appears under the bounties section of the platform"
+                )
+                let id = val.events.bountyIdLogger.returnValues.Id
+                this.address =
+                  this.updateBounties(this.title, this.description, this.chips, new Date(this.date).getTime(), this
+                    .selectedDifficulty, this.offering, id)
+              }
+              this.isLoading = false;
 
-          });
+            }).catch((err) => {
+              console.log(err)
+              this.isLoading = false;
+            });
+          } else {
+            this.BountyContract.methods.addBounty(
+              this.web3.Utils.fromAscii(this.title),
+              this.web3.Utils.fromAscii(this.description),
+              this.web3.Utils.fromAscii(this.chips.join()),
+              new Date(this.date).getTime(),
+              this.difficultyToInt(this.selectedDifficulty)).send({
+              value: this.offering,
+              gas: 8000000
+            }).then((val, err) => {
+              if (err) {
+                this.$log.debug(err)
+                this.error("OH no something went wrong wont you try again :D")
+              } else {
+                this.success(
+                  "Successfully submitted Bounty please see if it appears under the bounties section of the platform"
+                )
+                let id = val.events.bountyIdLogger.returnValues.Id
+                this.updateBounties(this.title, this.description, this.chips, new Date(this.date).getTime(), this
+                  .selectedDifficulty, this.offering, id)
+              }
+              this.isLoading = false;
+
+            }).catch((err) => {
+              console.log(err)
+              this.isLoading = false;
+            });
+          }
         }
         this.$log.debug(this.web3)
         this.$log.debug("date: " + this.date.toString())
@@ -130,7 +178,7 @@
       },
 
       init: async function () {
-        EmbarkJs.onReady((err) => {
+        EmbarkJS.onReady((err) => {
           this.$log.debug(err)
           this.web3 = EmbarkJS;
           this.BountyContract = require("../../embarkArtifacts/contracts/BountyContract").default
@@ -146,7 +194,7 @@
         this.chips.splice(this.chips.indexOf(item), 1)
         this.chips = [...this.chips]
       },
-      error(message) {
+      error() {
         Swal.fire({
           type: 'error',
           title: 'Oops...',
@@ -160,6 +208,60 @@
           message,
           'success'
         )
+      },
+      updateBounties(title, description, categories, endDate, difficulty, offering, id) {
+        let req = new XMLHttpRequest();
+        req.onreadystatechange = () => {
+          if (req.readyState == XMLHttpRequest.DONE) {
+            let response = JSON.parse(req.responseText)
+            response.push({
+              "title": title,
+              "description": description,
+              "endDate": endDate,
+              "offering": offering,
+              "difficulty": difficulty,
+              "category": categories,
+              "submissions": 0,
+              "fiat": Math.floor(Math.random() * 5000000),
+              "poster": this.getAddress(),
+              "stage": "Active",
+              "winner": "",
+              "indispute": [
+                false,
+                [
+
+                ]
+              ],
+              "hunterAddresses": [
+
+              ],
+              "solutionHashes": [
+
+              ],
+              "id": id,
+              "paused": false
+            })
+            let post = new XMLHttpRequest()
+            post.onreadystatechange = () => {
+              if (post.readyState == XMLHttpRequest.DONE) {
+                this.$log.debug(post.responseText)
+              }
+            };
+            post.open("PUT", "https://api.myjson.com/bins/i2v3t", true)
+            post.setRequestHeader("Content-type", "application/json")
+            post.send(JSON.stringify(response));
+
+          };
+
+        }
+        req.open("GET", "https://api.myjson.com/bins/i2v3t", true);
+        req.send();
+      },
+      getLoggedIn() {
+        return this.SecureLS.get("loggedIn")
+      },
+      getAddress() {
+        return this.SecureLS.get("address")
       }
     }
   }

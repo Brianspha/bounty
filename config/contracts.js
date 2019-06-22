@@ -1,3 +1,8 @@
+require("dotenv").config({
+  path: "config/Infura/config.env",
+  encoding: "utf8"
+})
+
 module.exports = {
   // default applies to all environments
   default: {
@@ -31,7 +36,7 @@ module.exports = {
     },
     // order of connections the dapp should connect to
     dappConnection: [
-      "$WEB3",  // uses pre existing web3 object if available (e.g in Mist)
+      "$WEB3", // uses pre existing web3 object if available (e.g in Mist)
       "ws://localhost:8546",
       "http://localhost:8545"
     ],
@@ -65,24 +70,38 @@ module.exports = {
     dappConnection: [
       "ws://localhost:8546",
       "http://localhost:8545",
-      "$WEB3"  // uses pre existing web3 object if available (e.g in Mist)
+      "$WEB3" // uses pre existing web3 object if available (e.g in Mist)
     ]
   },
 
   // merges with the settings in default
   // used with "embark run privatenet"
-  privatenet: {
-  },
+  privatenet: {},
 
   // merges with the settings in default
   // used with "embark run testnet"
-  testnet: {
-  },
+  testnet: {},
 
   // merges with the settings in default
   // used with "embark run livenet"
-  livenet: {
+  livenet: {},
+  RChain: {
+    deployment: {
+      protocol: "http",
+      type: "rpc",
+      host: "0.0.0.0",
+      port: "11000",
+    }
   },
+  infura: {
+    deployment: {
+      host: process.env.ROPSTEN,
+      port: false,
+      protocol: 'https',
+      type: "rpc",
+      accounts: []
+    },
+  }
 
   // you can name an environment with specific settings and then specify with
   // "embark run custom_name" or "embark blockchain custom_name"

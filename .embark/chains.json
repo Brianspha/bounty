@@ -1,201 +1,21 @@
 {
-  "0x97eb46d5709d24715179c73cedc8b0dfab7658edddcd928edd22e1465a6ce93d": {
+  "0x6ef4db78b962e5c3e61e9e0d36e7a03ee1cebe148200b821c7207f796b4b3e91": {
     "contracts": {
-      "0xf5af372ef7722d64f3acf031d00019cb577229af4dc137ceed1be9c8d0e681cf": {
+      "0xd23e69f12ea0215bd423af8aa8b23506376735d142b4ff924dfda88409711057": {
         "name": "SafeMath",
-        "address": "0xa82C7d0f1eef59aBf2Af722666F5A9c5cB40dA77"
+        "address": "0x25fa4E80d4C4DFFa3d1e7620f61430727cCC67b8"
       },
-      "0x5e719b30c9c8ebb6e6f267b5eec156ab243dcecbdbb0b339c756c3b463688ca6": {
-        "name": "Bounty",
-        "address": "0x4DD75382a482540051222DBEd8a8efF2172D5885"
-      },
-      "0x98ad433e0b9c3991c97ade0b90d63cad6a45e796561377d709bae705313cb748": {
-        "name": "SafeMath",
-        "address": "0x9366439F7B13B1b225Ff7eeFAF14830382b001c9"
-      }
-    }
-  },
-  "0x0d775b979fcc8ed60e1434e6a7b889d5424b49d154c3a7b9918c1be90867c0f1": {
-    "contracts": {
-      "0xfd54641220cb84b79b7a7bbd7a5ec1b7c836f4d3df06d037c36f269a87da9e29": {
-        "name": "Bounty",
-        "address": "0xcf647f040BAcC8ad6c0b8d85EC1b8010041Efc41"
-      },
-      "0xf5af372ef7722d64f3acf031d00019cb577229af4dc137ceed1be9c8d0e681cf": {
-        "name": "SafeMath",
-        "address": "0x317017daEEDCD3E0432D2419BcA08aaB66A62d5F"
-      }
-    }
-  },
-  "0x291932a0e872770d6cf516f1b22c66114335cf786c7a5933008b26cb3029a37a": {
-    "contracts": {
-      "0x4c9a32b5f9590923bccbd6ff7a02f231ab404229e9bca5d6305479bd5d70d538": {
-        "name": "SafeMath",
-        "address": "0x1564c0a995f98F3F77d6B1Fb30d27963B7Bc52e7"
-      },
-      "0x5a217dcb839166e82885f839fde35d8bc1fca930d29f0d0c72cf5c0e30ff9b60": {
-        "name": "Bounty",
-        "address": "0x661685C1ED9727f15985a1019f8eFF0554D6e894"
-      }
-    }
-  },
-  "0x5161c7d6484b376cb669260d423215229a0e3bafe66d984855e475dae78cc09e": {
-    "contracts": {
-      "0xfd54641220cb84b79b7a7bbd7a5ec1b7c836f4d3df06d037c36f269a87da9e29": {
-        "name": "Bounty",
-        "address": "0x30f09709B14475e4df023965e923FF6491500618"
-      },
-      "0xf5af372ef7722d64f3acf031d00019cb577229af4dc137ceed1be9c8d0e681cf": {
-        "name": "SafeMath",
-        "address": "0xE505EeC701Cff78959c9732eE8CA83d2EFF8C441"
-      },
-      "0xd3121ae19fc1234d94ae1209c7a60302f46934a94a0d9f519530a5a0f34ad51e": {
+      "0x5889e3f8bd94a584149aa32630c54e5c4364bc33e38887b469f543d95633e372": {
         "name": "BountyContract",
-        "address": "0xd798896a6248277905a0906549DBD55A3A35A0F4"
+        "address": "0xb553ad4f82aBf73C1133129e33541b0B51263CF3"
       },
-      "0xbba42b816c3d1f480171e4caeb9e79d07712731c35acf74f79c7b086ea49dfb5": {
-        "name": "BountyContract",
-        "address": "0x30f09709B14475e4df023965e923FF6491500618"
+      "0x21a7fc2003f072488abe56f7b49add6f6d41a6cb5512e12dfd0b7729ab8ba8d8": {
+        "name": "ERC720",
+        "address": "0xa4C37AFCab505C239587124142519Dea83FBfe89"
       },
-      "0x6588cce25bc346efd0aec3765bd0806426ce42e3ef85929c3f74b1b2cafef338": {
+      "0x89b3dd418d4111e7093da3377ae2d89e2a502d93c0f92d287067377164d4331c": {
         "name": "BountyContract",
-        "address": "0x3569B3902c043BbCE1FDb3bD4a3eb0280Cb62281"
-      },
-      "0xbbd773c2f72dbdcf0cfd0ec87ef9c758c6eb2c862268974e125282596da2d352": {
-        "name": "BountyContract",
-        "address": "0xf00ba8b8c6340Ec5C767bE7f97b0c565D2c3F413"
-      },
-      "0x10f540f8bb86822c8fd4543646e17f3d2078edc412e4f52636870ec3a810cbcb": {
-        "name": "BountyContract",
-        "address": "0xBf69F176181A9D5cB5079494Bc4B502B1B7EBDb9"
-      },
-      "0xcb71c0899bd8d57e2c7c18ecde91dd444b8be600105ee0082e49999b200b22a1": {
-        "name": "BountyContract",
-        "address": "0x6220E9051b1F017538E590898E05b508eBB8C629"
-      },
-      "0xbaff89ab7af47bdfb668f1de581f94bccf870bc4d31173b3a4c8720437c56742": {
-        "name": "BountyContract",
-        "address": "0xa722F42cD146049Ec9Ea87D19dFADcE440A6c854"
-      },
-      "0x723829ab57a80cc8868b83605d997332ffab5547a5a4b095259158527eb7bab9": {
-        "name": "BountyContract",
-        "address": "0x4d7e237047DD3300eDE9F139d628FD16388C9471"
-      },
-      "0x532a54cebb9c5f86e894f76cbeaba3336c8fe793c4515cf05593ba2565f44c58": {
-        "name": "BountyContract",
-        "address": "0xcf41c216272ce71739073E8cC9d9d48B9a589b6F"
-      },
-      "0x95b586566abba2a4a023ddf06e71f2c9d7e278b67f570692994256ab4157d3d0": {
-        "name": "BountyContract",
-        "address": "0xAaa790BF691d567c42859b7777e0C4D49a7a76D5"
-      },
-      "0xfc7736e2af057929500523832e98139303116733984ebb10f8123d60c110a56e": {
-        "name": "BountyContract",
-        "address": "0xDa0cBeBC3F6A01Cd1f405e9b37E9edD05c2d3Ebb"
-      },
-      "0x31b106db8a30ee8e156f4086fa2100a338f8eec5c11b4795048aadd7b421952e": {
-        "name": "BountyContract",
-        "address": "0x6cA512F26d6D60E8725fdE1A7cAC68594d085799"
-      },
-      "0xcccbe4c400befa3141765294afb913e9261ca1208d1a8661c98e672310034050": {
-        "name": "BountyContract",
-        "address": "0x9d8D01fF4e463B9aCB5A40024984d08E95559710"
-      },
-      "0xff9f05024106965f08a519641181e15b53e6432e6958e33bd7c3cafffc134847": {
-        "name": "BountyContract",
-        "address": "0xEA37137e5f414084b356bFBd5abC414D2B51923E"
-      },
-      "0xf31e12f4a4cd84a010302c345afd7b3ab8a14423807ebc4adb6b7111ffc7afda": {
-        "name": "BountyContract",
-        "address": "0x3da282224a8F72CbC33513aFCD59Be95ca671858"
-      },
-      "0x07897d94626a1226793d89be163c16bbc760b3e6d2fa59f5cdff78ca504e685e": {
-        "name": "BountyContract",
-        "address": "0x9AF3AD32972aDbbF35fdaF548a2cfF1Ae22CC616"
-      },
-      "0x896e3f2b40acdfa5e3bcbdee3d07ce9e5b6dfe95a74de4cb96569dbf682cfdaa": {
-        "name": "BountyContract",
-        "address": "0x027203C0992705ce98C43a06eC9192AC19AAa35B"
-      },
-      "0xa4aed0fdd74f7135d13313ad376fe52273cfca1e353f72b7b15de353b09c2feb": {
-        "name": "BountyContract",
-        "address": "0xFB7EEcc3Bff0Fa23A06E6984Bc4444fE5b4F0059"
-      },
-      "0x4e07e07fb696fd110e4061bb313dd7282a000e1e2a0022796e375201f77038e8": {
-        "name": "BountyContract",
-        "address": "0x62B4B688EfF5b24D06E7652953cb97c677c798F5"
-      },
-      "0x76ea3ff7bf3b42b350a9003b5113b5a387b799f586892af545d9d38cff093ff5": {
-        "name": "BountyContract",
-        "address": "0x6a864fA7a5cbDDeb7b57b5E3f1eeEa040Ff5e7BE"
-      },
-      "0xd65fca879820303ca6a90b4ad3219d6f161de17f4c093d5df5f952dff0b1b31f": {
-        "name": "BountyContract",
-        "address": "0xBFb0953a8AdC9A10E8741c0a1e8890d0d13DD353"
-      },
-      "0x9684877bd8ecdadfa02e5ac3b981983a2904a192cbd1e8ab7fa26793bbb7c465": {
-        "name": "BountyContract",
-        "address": "0x3994F6ea6c17C3f70486BAC4E16F4c1efF18CA4F"
-      },
-      "0x395a5f0b81a03c05cd6969ec7a55c7903c71510a649493cce8fd523a108db50b": {
-        "name": "BountyContract",
-        "address": "0x2aD67E82B95d640C524DAE84778c288AE5bff6cA"
-      },
-      "0x7c46306e3131ad619fbe0e8b54467cd7dc59c83d6cb76b179ae2eafb04886337": {
-        "name": "BountyContract",
-        "address": "0x308e41f21d425f5723bF1c6C1A802C42148F5552"
-      },
-      "0x9eb4f8459c8313226ba1ccd4059a52cac11f5118242c890a137251e513882834": {
-        "name": "BountyContract",
-        "address": "0xdA603E7C2E4374fC9095c54a0D1ae08e0013DfD3"
-      },
-      "0x4b09c3f1a63960ce0b255eef8152a00f46af582c43149d2f1e1dab1a65271016": {
-        "name": "BountyContract",
-        "address": "0xEFF24Ff13Bce1d8682F5A005f4A96Bae906D2955"
-      },
-      "0xb7c9a8b683f4e6a3edb964728a86bc3318accac58cc89b362f3957e09f330a0d": {
-        "name": "BountyContract",
-        "address": "0x243d73556dE9F99fE2988810D0Cb87a8eAD80629"
-      },
-      "0xcb589f3f6547bcbe841deab43bfd74b9377c643383037d97e3d6b7f4de55c3c6": {
-        "name": "BountyContract",
-        "address": "0x9e97AF6e184b287F903C127aF403a1614a471c99"
-      },
-      "0xb1434439bf3f0466762c56702ecb113e2b3fee7abd3a8a695baac6af8e6fbc27": {
-        "name": "BountyContract",
-        "address": "0x07f3f1E1A4468E71Cf0f3c3375140e52D4D77E7e"
-      },
-      "0xfb494f7c466ff32a37566a22ca55ab03bdc65cfb03a28d28ece32adfd249b865": {
-        "name": "BountyContract",
-        "address": "0xfE6F73D9E5673ca6849F0b993B63C78Cd8E65078"
-      },
-      "0xddd5b06a517a7f63f039d46e00676883112766e89172c248a850648bdf866f68": {
-        "name": "BountyContract",
-        "address": "0x753083AF8b84671f1A8D7e1820578E1E2C6868E4"
-      },
-      "0xb1556d8b54adfdd3542bd5c9e35176b3e74c57d920bed9ff8e85286dc4db4b44": {
-        "name": "BountyContract",
-        "address": "0xad7CaDAbB54a912eA7DC44cAEeEdCf25b7701D13"
-      },
-      "0x900080251a97a88a253ea90a76ac5166b3039b4a658f99e1e48c22c741fa3da6": {
-        "name": "BountyContract",
-        "address": "0x92A255fe70DE1e353fA2769f8Ac2250C3759D310"
-      },
-      "0x8b929bb00eabf7b9ac0c1ca9dbe91567a40189c38dd6e6b235921c2e385d5da8": {
-        "name": "BountyContract",
-        "address": "0x0bA11Bc4b5519d20d3a91Aab4B29c748C3ac6b58"
-      },
-      "0xf5d8557dea6f761501eec70e2f2cbd7c5537e0d3e2e4cd1f8442dbe5945f68ff": {
-        "name": "BountyContract",
-        "address": "0x923dC87A179FCB19Ed988B52D9Fa2D632F1b2C74"
-      },
-      "0xd97ef2a50ecf0d20acd8f017f47e78d146139c34c1654a676835149caa5500bc": {
-        "name": "BountyContract",
-        "address": "0x3a34D08d73f55777207FD190BeCDEcC3ae3f9C89"
-      },
-      "0x8ce4ec8d181e71494dbdc65f68572e7feb3f7494645bcd252a7655fc800237e8": {
-        "name": "BountyContract",
-        "address": "0x5a73Fdd148618144fA8C9Cd5b78383d8252ddFa8"
+        "address": "0xDceD6A9831E32db4AEE9E9206AB2AfDa9A9dFfa8"
       }
     }
   }

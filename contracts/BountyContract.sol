@@ -1,79 +1,24 @@
-pragma solidity ^ 0.5 .9;
-import "../contracts/libraries/SafeMath.sol";
+pragma solidity >= 0.5 .0;
+import "../contracts/tokens/ERC720.sol";
+import "../contracts/interfaces/IBountyContract.sol";
 
 //@dev contract definition
-contract BountyContract {
+contract BountyContract is IBountyContract{
     using SafeMath
     for uint256;
-    /*=================================== @dev structs definition code start===================================*/
-    /**
-    @dev User struct represents a user who eitheir posts bounties or a bounty seeker
-     @atr id represents the address of the User
-     @atr earnings represents the total earnings by User
-     @atr Bounties represents the ids of all the bounties the user has completed
-     @active indicates if the user is active or not
-     @atr suspended indicates if the user is suspended or not
-     @atr ranking indicates the users ranking 
-     */
-    struct User {
-        address id;
-        uint256 earnings;
-        bytes32[] acceptedBounties;
-        bytes32[] rejectedBounties;
-        bytes32[] postedBounties;
-        bool active;
-        bool suspended;
-        uint256 ranking;
-    }
-
-    /**
-    @dev bounty struct representing a typical bounty that is submitted on the platform
-    @atr id unique identifier for the Bounty 
-    @atr title represents the title of the bounty 
-    @atr description represents the bountys description usually what the bounty wants done 
-    @atr start indicates the date the bounty was posted
-    @atr end indicates the date the bounty expires
-    @atr offering indicates the amount in ether the bounty poster is willing to pay
-    @atr difficulty indicates the difficulty level of the bounty 1-begginer 2-intermediate 3-Hard 4-Extreme
-    @atr submissions the number of submissions the bounty has recieved
-    @atr indicates if the bounty has expired or not
-    @atr poster the poster of the bounty
-    @atr paused in the instance where theres a dispute this atribute will be activated
-    @atr category represents the category/categories the bounty falls under
-    @atr BountyHunters addresses of all the Bounty Hunters who have submitted solutions
-    @atr proposedSolutions the hash to the solution stored on IPFS
-    @atr winner represents the Bounty whos solution was accepted
-    @notice poster atr cannot be used as an id as user may have multiple bounties posted looping may be costly
-    *A Bounty hunter can post as many solutions as possible only the lastest solution will be accepted
-     */
-    struct Bounty {
-        bytes id;
-        bytes title;
-        bytes description;
-        uint startDate;
-        uint endDate;
-        uint256 offering;
-        bytes category;
-        uint difficulty;
-        uint256 submissions;
-        bool active;
-        address poster;
-        bytes[] proposedSolutions;
-        address[] BountyHunters;
-        address winner;
-        bool paused;
-    }
-
+   
     /*=================================== @dev modifier definitions code start===================================*/
 
     modifier onlyOwnwer() {
         require(msg.sender == owner, "Only owner is allowed to call this function");
         _;
     }
+    modifier onlyBy(address who) {
+        require(msg.sender == who, "Only owner is allowed to call this function");
+        _;
+    }
 
-    /*=================================== @dev event definition code start===================================*/
-    event bountyIdLogger(bytes32 Id);
-    /*=================================== @dev contract variable code start===================================*/
+        /*=================================== @dev contract variable code start===================================*/
 
     address owner;
     mapping(address => User) users;
@@ -85,6 +30,9 @@ contract BountyContract {
         registerUser();
     }
     /*===================================User Functions code start===================================*/
+    /**
+     *@dev registerUser registers a new users
+     */
     function registerUser() public returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
         require(!users[msg.sender].active, "User already registered");
@@ -94,25 +42,53 @@ contract BountyContract {
         users[msg.sender].ranking = 0;
         return true;
     }
-
+    /**
+    *@dev updateUserRanking updates a users ranking
+    @notice not yet implemented in front end
+    */
     function updateUserRanking(uint256 rank, address user) public onlyOwnwer returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
         require(user != address(0), "Invalid user address");
+        require(!users[user].punished, "User is currently punished and cannot use the platform until further notice");
         require(!users[user].active, "User already registered");
         require(rank > 0, "Invalid ranking paramter rank must be greater than 0");
         users[user].ranking = rank;
         return true;
     }
-
+    /**
+     *@dev userExists checks if a user exits
+     */
     function userExists() public view returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
         return users[msg.sender].active;
     }
-
+    /**
+    *@dev suspendUser responsible for suspending a user
+    @notice introduces front running vulnerability
+    @param user the user to be punished
+    */
+    function suspendUser(address user) public onlyOwnwer returns(bool) {
+        require(msg.sender != address(0), "Invalid owner address");
+        require(user != address(0), "Invalid user address");
+        require(users[user].active, "User not registered");
+        require(!users[user].punished, "user already serving punishment");
+        users[user].punished = false;
+        return users[user].punished;
+    }
     /*===================================Bounty Functions code start===================================*/
-    function addBounty(bytes memory title, bytes memory description, bytes memory category, uint endDate, uint difficulty) public payable {
+    /**
+    *@dev addBounty responsible for adding a new bounty to the platform
+    @param title title of the bounty
+    @param description description of what the bounty poster wants achieved
+    @param category the categories the bounty falls under
+    @param endDate the last day the bounty be closed
+    @param difficulty represents the difficulty assocciated with trying to solve the bounty
+    */
+    function addBounty(bytes memory title, bytes memory description, bytes memory category, uint endDate, uint difficulty)
+    public payable {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
+        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");
         require(endDate > 0, "End date for bounty not valid");
         require(difficulty >= 1 && difficulty <= 4, "Bounty difficulty must be 1=begginer 2=intermediate 3=Hard 4=Extreme");
         require(msg.value > 0, "Insufficient funds");
@@ -132,87 +108,166 @@ contract BountyContract {
         users[msg.sender].postedBounties.push(id);
         emit bountyIdLogger(id);
     }
-
-    function bountyExists(bytes32 bountyId) public view returns(bool) {
+    /**
+    *@dev addBountyOfferToken responsible for adding a new bounty to the platform but using an ERC720 token
+    @param title title of the bounty
+    @param description description of what the bounty poster wants achieved
+    @param category the categories the bounty falls under
+    @param endDate the last day the bounty be closed
+    @param difficulty represents the difficulty assocciated with trying to solve the bounty
+    */
+    function addBountyOfferToken(bytes memory title, bytes memory description, bytes memory category, uint endDate, uint difficulty, address tokenAddress, uint256 amount) public returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
+        require(tokenAddress != address(0), "Invalid Token address");
+        require(amount > 0, "Token pledged amount must be greater than 0");
         require(users[msg.sender].active, "User not registered");
-        return bounties[bountyId].active;
+        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");
+        require(endDate > 0, "End date for bounty not valid");
+        require(difficulty >= 1 && difficulty <= 4, "Bounty difficulty must be 1=begginer 2=intermediate 3=Hard 4=Extreme");
+        bytes32 id = keccak256((abi.encode(title, endDate, difficulty, msg.sender, description, 0)));
+        require(!bounties[id].active, "Bounty already active");
+        bounties[id].poster = msg.sender;
+        bounties[id].title = title;
+        bounties[id].description = description;
+        bounties[id].startDate = block.timestamp;
+        bounties[id].endDate = endDate;
+        bounties[id].isToken = true;
+        bounties[id].difficulty = difficulty;
+        bounties[id].active = true;
+        bounties[id].submissions = 0;
+        bounties[id].paused = false;
+        bounties[id].category = category;
+        users[msg.sender].postedBounties.push(id);
+        bounties[id].tokenPayment.tokenAddress = tokenAddress;
+        bounties[id].tokenPayment.amount = amount;
+        bounties[id].tokenPayment.active = true;
+        emit bountyIdLogger(id);
     }
-
+    /**
+           *@dev bountyExists responsible for checking if a bounty exits @param bountyId the unique identifier of the
+           bounty */
+    function bountyExists(bytes32 bountyId) public view returns(bool) {
+        require(msg.sender !=
+            address(0), "Invalid sender address");
+        require(users[msg.sender].active, "User not registered");
+        return
+        bounties[bountyId].active;
+    }
+    /** *@dev proposeSolution responsible for proposing a solution to a given bounty
+           @param bountyId the unique identifier of the bounty @param solutionHash the hash of the solution stored on IPFS
+           */
     function proposeSolution(bytes32 bountyId, bytes memory solutionHash) public returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
+        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");
         require(bounties[bountyId].active, "Bounty already expired");
-        require(bounties[bountyId].poster != msg.sender, "Cannot propose solution as you are the owner of the Bounty");
-        require(!bounties[bountyId].paused, "Bounty not accepting any solutions as there is/are a pending issues with the bounty poster");
+        require(bounties[bountyId].poster !=
+            msg.sender, "Cannot propose solution as you are the owner of the Bounty");
+        require(!bounties[bountyId].paused, "Bounty not accepting any solutions as there is/are a pending issues with the bounty poster ");
         bounties[bountyId].proposedSolutions.push(solutionHash);
         bounties[bountyId].submissions.add(1);
+        bounties[bountyId].bountyHunters.push(msg.sender);
         return true;
     }
-
+    /** *@dev rejectSolution responsible for
+           rejecting a solution to a given bounty @param bountyId the unique identifier of the bounty */
     function rejectSolution(bytes32 bountyId) public returns(bool) {
-        require(msg.sender != address(0), "Invalid sender address");
+        require(msg.sender !=
+            address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
         require(bounties[bountyId].active, "Bounty already expired or is not registered");
-        require(!bounties[bountyId].paused, "Bounty cannot reject offers as there is/are a pending issues with the bounty poster");
+        require(!bounties[bountyId].paused, "Bounty cannot reject offers as there is/are a pending issues with the bounty poster ");
         users[msg.sender].rejectedBounties.push(bountyId);
         return true;
     }
-
-    function acceptSolution(bytes32 bountyId) public returns(bool) {
+    /** *@dev acceptSolution responsible for
+           accepting a solution to a given bounty and rewards the bounty hunter with the offering pledged by the bounty
+           @param bountyId the unique identifier of the bounty @param bountyHunterAddress the address of the bountyHunter
+           */
+    function acceptSolution(bytes32 bountyId, address bountyHunterAddress) public returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
+        require(bountyHunterAddress !=
+            address(0), "Invalid Bounty Hunter Address");
         require(users[msg.sender].active, "User not registered");
+        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");
         require(bounties[bountyId].poster == msg.sender, "Only owner of the Bounty is allowed to accept solutions");
         require(bounties[bountyId].active, "Bounty already expired");
-        require(!bounties[bountyId].paused, "Bounty cannot accept offers as there is/are a pending issues with the bounty poster");
-
-        users[msg.sender].acceptedBounties.push(bountyId);
-        users[msg.sender].earnings.add(bounties[bountyId].offering);
+        require(!bounties[bountyId].paused, "Bounty cannot accept offers as there is/are a pending issues with the bounty poster ");
+        if (bounties[bountyId].isToken) {
+            ERC720 token = ERC720(bounties[bountyId].tokenPayment.tokenAddress);
+            bool
+            results = token.transfer(bountyHunterAddress, bounties[bountyId].tokenPayment.amount);
+            require(results, "Insufficient funds please ensure you have a sufficient balance");
+        } else {
+            users[msg.sender].acceptedBounties.push(bountyId);
+            users[msg.sender].earnings.add(bounties[bountyId].offering);
+        }
         bounties[bountyId].active = false;
         bounties[bountyId].endDate = block.timestamp;
         return true;
     }
-
+    /** *@dev
+           bountyExpired responsible for checking if a given bounty has expired or not @param bountyId the unique
+           identifier of the bounty */
     function bountyExpired(bytes32 bountyId) public view returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
-        require(!bounties[bountyId].paused, "Bounty cannot be turned off as there is/are a pending issues with the bounty poster");
+        require(!bounties[bountyId].paused, "Bounty cannot be turned off as there is/are a pending issues with the bounty poster ");
         return !bounties[bountyId].active;
     }
-
+    /** *@dev pauseBounty responsible for pausing a bounty in the instance
+           of a dispute arising @param bountyId the unique identifier of the bounty */
     function pauseBounty(bytes32 bountyId) public returns(bool) {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
+        require(bounties[bountyId].poster == msg.sender, "Only an owner of the bounty is allowed to end a dispute");
         require(bounties[bountyId].active, "Bounty already paused");
-        require(!bounties[bountyId].paused, "Bounty cannot be turned off as there is/are a pending issues with the bounty poster");
+        require(!bounties[bountyId].paused, "Bounty cannot be turned off as there is/are a pending issues with the bounty poster ");
         bounties[bountyId].paused = true;
         return true;
     }
-
-    function endDispute(bytes32 bountyId) public onlyOwnwer returns(bool) {
-        require(msg.sender != address(0), "Invalid sender address");
+    /** *@dev endDispute responsible for ending a dispute after an
+           agreement ahas been reach by both the bounty hunter and bounty poster @param bountyId the unique identifier of
+           the bounty */
+    function endDispute(bytes32 bountyId) public returns(bool) {
+        require(msg.sender !=
+            address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
+        require(bounties[bountyId].poster == msg.sender, "Only an owner of the bounty is allowed to end a dispute");
         require(bounties[bountyId].active, "Bounty not in dispute");
         require(bounties[bountyId].paused, "Bounty dispute already resolved");
         bounties[bountyId].paused = false;
-        return true;
-    }
-
+        return
+        true;
+    } /** *@dev getUserPostedBounties responsible for getting all posted bounties by a given user */
     function getUserPostedBounties() public view returns(bytes32[] memory) {
-        require(msg.sender != address(0), "Invalid sender address");
+        require(msg.sender !=
+            address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
+        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");
         return users[msg.sender].postedBounties;
     }
-
+    /** *@dev getUserRejectedBounties responsible for getting all
+           rejected bounties by a given user */
     function getUserRejectedBounties() public view returns(bytes32[] memory) {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
+        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");
         return users[msg.sender].rejectedBounties;
     }
-
+    /** *@dev getUserAcceptedBounties responsible for getting all
+           accepted bounties by a given user */
     function getUserAcceptedBounties() public view returns(bytes32[] memory) {
         require(msg.sender != address(0), "Invalid sender address");
         require(users[msg.sender].active, "User not registered");
+        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");
         return users[msg.sender].acceptedBounties;
+    }
+    /** *@dev getaddresseofBountyHunters responsible for getting all
+           addresses of all bounty hunters who have submitted solutions to a given bounty @param bountyId the unique
+           identifier of the bounty */
+    function getaddresseofBountyHunters(bytes32 bountyId) public view returns(address[] memory) {
+        require(msg.sender != address(0), "Invalid sender address");
+        return bounties[bountyId].bountyHunters;
     }
 }

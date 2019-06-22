@@ -1,4 +1,4 @@
-const BountyContract = require('Embark/contracts/Bounty');
+const BountyContract = require('Embark/contracts/BountyContract');
 const EmbarkJS = require('Embark/EmbarkJS')
 let accounts;
 
@@ -21,8 +21,17 @@ contract("BountyContract Deploy", async () => {
   let bountyId = '';
   let solutionHash = '';
   it("should register a new user", async () => {
-    let result = await BountyContract.methods.registerUser().send({from:accounts[1]});
-    console.log(result.from)
+    let result = await BountyContract.methods.registerUser().send({
+      from: accounts[1]
+    });
+    //console.log(result.from)
+  });
+  it("should register the same registered user and throw an error", async () => {
+    let result = await BountyContract.methods.registerUser().send({
+      from: accounts[1]
+    }).then(function (val, err) {
+      assert.strictEqual(err != null, true)
+    });
   });
   it("should check if user exists", async () => {
     let result = await BountyContract.methods.userExists().call();
@@ -36,7 +45,14 @@ contract("BountyContract Deploy", async () => {
     bountyId = bountyId.events.bountyIdLogger.returnValues.Id;
     assert.strictEqual(web3.utils.isHex(bountyId), true);
   })
+  it("should add a an existing bounty and throw an error", async () => {
+    var temp = await BountyContract.methods.addBounty(web3.utils.fromAscii("Build Website"), web3.utils.fromAscii("some description"), web3.utils.fromAscii("some categories"), 12345, 4).send({
+      value: 10,
+    }).then(function (val, err) {
+      assert.strictEqual(err != null, true)
+    });
 
+  })
   it("should check if a bounty exists", async () => {
     let result = await BountyContract.methods.bountyExists(bountyId).call();
     assert.strictEqual(result, true);
@@ -53,7 +69,11 @@ contract("BountyContract Deploy", async () => {
   it("should pause a bounty", async () => {
     let result = await BountyContract.methods.pauseBounty(bountyId).send();
   })
-
+  it("should pause an already paused bounty and throw an error", async () => {
+    let result = await BountyContract.methods.pauseBounty(bountyId).send().then(function (val, err) {
+      assert.strictEqual(err != null, true)
+    });
+  })
   it("should end any disputes relating to a bounty ", async () => {
     let result = await BountyContract.methods.endDispute(bountyId).send();
   })
@@ -79,21 +99,30 @@ contract("BountyContract Deploy", async () => {
 
   it("should upload a solution to ipfs and return a receipt ", async () => {
     EmbarkJS.Storage.saveText("hello world its me").then(hash => {
-      console.log("Hash: ", hash)
       solutionHash = hash;
+      BountyContract.methods.proposeSolution(bountyId, hash).send({
+        gas: 8000000
+      }).then(function (val, err) {
+        if (err) {
+          //console.log(err)
+        } else {
+          //console.log(val)
+        }
+        assert.strictEqual(!err, true)
+      })
       assert.strictEqual(hash != null, true);
     }).catch((err => {
-      console.log(err)
+      //console.log(err)
     }))
   })
 
   it("should get a solution uploaded by a bounty hunter from ipfs", async () => {
     EmbarkJS.Storage.get(solutionHash).then(content => {
       assert.strictEqual(content != null, true)
-      console.log("content: ", content)
+      //console.log("content: ", content)
 
     }).catch((err => {
-      console.log(err)
+      //console.log(err)
     }))
   })
 

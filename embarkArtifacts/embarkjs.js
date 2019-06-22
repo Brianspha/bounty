@@ -263,13 +263,5 @@ var whenEnvIsLoaded = function(cb) {
     cb();
   }
 }
-"use strict";
 
-const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.hostname}:${location.port}`);
-ws.addEventListener('message', evt => {
-  if (evt.data === 'outputDone') {
-    location.reload(true);
-  }
-});
-//# sourceMappingURL=reload-on-change.js.map
 /* eslint-enable */

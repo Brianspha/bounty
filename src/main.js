@@ -9,6 +9,9 @@ import VueAxios from 'vue-axios'
 import axios from 'axios'
 import VueAsyncData from "vue-async-data";
 import VueLogger from 'vuejs-logger';
+import VueFilter from 'vue-filter';
+
+Vue.use(VueFilter)
 const isProduction = process.env.NODE_ENV === 'production';
 Vue.use(VueAsyncData)
 Vue.use(VueAxios, axios)

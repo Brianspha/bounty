@@ -21,23 +21,23 @@
                 </v-list-tile-content>
               </v-list-tile>
             </template>
-            <v-list-tile v-for="(child, i) in item.children" :key="i" @click="">
-              <v-list-tile-action v-if="child.icon" :to="child.to">
+            <v-list-tile v-for="(child, i) in item.children" :key="i">
+              <v-list-tile-action v-if="child.render &&child.icon" :to="child.to">
                 <v-icon>{{ child.icon }}</v-icon>
               </v-list-tile-action>
-              <v-list-tile-content>
+              <v-list-tile-content v-if="child.render">
                 <v-list-tile-title>
                   {{ child.text }}
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
           </v-list-group>
-          <v-list-tile :to="item.to" v-else :key="item.text" @click="">
-            <v-list-tile-action>
+          <v-list-tile :to="item.to" v-else :key="item.text">
+            <v-list-tile-action v-if="item.render">
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-              <v-list-tile-title>
+              <v-list-tile-title v-if="item.render">
                 {{ item.text }}
               </v-list-tile-title>
             </v-list-tile-content>
@@ -57,8 +57,11 @@
         </v-avatar>
       </v-btn>
     </v-toolbar>
-    <v-btn fab bottom right color="pink" dark fixed @click="dialog = !dialog">
+    <v-btn fab bottom right color="pink" dark fixed @click="logOut()">
       <v-icon>lock_open</v-icon>
+    </v-btn>
+    <v-btn fab bottom left color="pink" dark fixed @click="logIn()">
+      <v-icon>lock</v-icon>
     </v-btn>
     <main>
       <v-content>
@@ -75,55 +78,13 @@
 </template>
 
 <script>
-  import EmbarkJs from "../embarkArtifacts/embarkjs";
-  import $ from "jquery";
-  import Vue from 'vue';
+  import EmbarkJS from "../embarkArtifacts/embarkjs";
+  import Swal from 'sweetalert2'
+  import SecureLS from 'secure-ls'
+  import Vue from 'vue'
+
   export default {
     name: 'app',
-    methods: {
-      init: async function () {
-        EmbarkJs.onReady((err) => {
-          this.$log.debug(err)
-          this.web3 = EmbarkJS;
-          this.BountyContract = require("../embarkArtifacts/contracts/BountyContract").default
-        })
-      },
-      updateBounties() {
-        Vue.axios.get("https://api.myjson.com/bins/135rv1").then((response) => {
-          this.$log.debug(response.data);
-          for (var i = 0; i < response.data.length; i++) {
-            let data = response.data[i];
-            if (data.poster == "") {
-              this.BountyContract.methods.addBounty(this.web3.Utils.fromAscii(data.title),
-                this.web3.Utils.fromAscii(data.description), this.web3.Utils.fromAscii(data.title),
-                this.web3.Utils.fromAscii(data.category.join()), this.web3.Utils.fromAscii(parseInt(data.endDate)),
-                this.web3.Utils.fromAscii(parseInt(data.difficulty))).send({
-                value: data.offering
-              }).then((val, err) => {
-                if (err) {
-                  this.$log.debug(err)
-                } else {
-                  this.$log.debug(val);
-                  data.poster = val.from;
-                  $.ajax({
-                    url: "https://api.myjson.com/bins/135rv1",
-                    type: "PUT",
-                    data: data,
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (data, textStatus, jqXHR) {}
-                  });
-                }
-              })
-            }
-          }
-        })
-      }
-    },
-    mounted() {
-      this.init();
-      this.updateBounties()
-    },
     components: {},
     data: () => ({
       dialog: false,
@@ -131,43 +92,159 @@
       web3: null,
       BountyContract: null,
       items: [{
-          heading: 'Personal'
-        },
-        {
-          icon: 'person_pin',
-          text: 'Profile',
-          to: "/Profile"
-        },
-        {
-          divider: true
-        },
-        {
           heading: 'Platform'
         },
         {
           icon: 'image_search',
           text: 'Bounties',
-          to: "/Bounties"
+          to: "/Bounties",
+          render: true
 
-        },
-        {
+        }
+
+      ],
+      loggedIn: false,
+      SecureLS: new SecureLS()
+    }),
+    beforeMount() {},
+    mounted() {
+      this.init();
+    },
+    methods: {
+      difficultyToInt(stringDifficulty) {
+        switch (stringDifficulty) {
+          case "Begginner":
+            return 1;
+          case "Intermediate":
+            return 2;
+          case "Hard":
+            return 3;
+          case "Extreme":
+            return 4;
+        }
+      },
+      error(message) {
+        Swal.fire({
+          type: 'error',
+          title: 'Oops...',
+          text: message,
+          allowOutsideClick: true
+        })
+      },
+      init: async function () {
+        EmbarkJS.onReady((err) => {
+          if (err) {
+            this.SecureLS.removeAll();
+            this.error(
+              'Platform only works with metamask enabled most features will be disabled until metamask connects to your wallet'
+            )
+            this.setLoggedIn(false, null)
+          } else {
+            this.web3 = EmbarkJS;
+            this.SecureLS.removeAll();
+            this.BountyContract = require("../embarkArtifacts/contracts/BountyContract").default
+            this.registerUser()
+
+          }
+        })
+        this.$forceUpdate();
+      },
+      setDefualt() {
+        this.items.push({
           icon: 'add_to_queue',
           text: 'Add Bounty',
-          to: "/AddBounty"
-        },
-        {
+          to: "/AddBounty",
+          render: true
+        })
+
+        this.items.push({
           divider: true
-        },
-        {
-          heading: 'Misc'
-        },
-        {
-          icon: 'whatshot',
-          text: 'Leaderboard',
-          to: "/LeaderBoard"
-        },
-      ]
-    }),
+        })
+        this.items.push({
+          heading: 'Personal'
+        })
+        this.items.push({
+          icon: 'person_pin',
+          text: 'Added Bounties',
+          to: "/CreatedBounties",
+          render: true
+        })
+        this.items.push({
+          icon: 'query_builder',
+          text: 'Resolve Added Bounties',
+          to: "/Disputes",
+          render: true
+        })
+
+        this.items.push({
+          icon: 'report_problem',
+          text: 'Pending Bounties',
+          to: "/PendingBounties",
+          render: true
+        })
+      },
+      registerUser() {
+        let tempTHis = this;
+        this.BountyContract.methods.userExists().call({
+          gas: 8000000
+        }).then(function (val, err) {
+          if (err) {
+            console.log(err)
+          } else if (!val) {
+            tempTHis.BountyContract.methods.registerUser().send({
+              gas: 8000000
+            }).then(function (val, err) {
+              if (err) {
+                console.log(err)
+              } else {
+                tempTHis.initialiseUserData()
+              }
+            })
+          } else {
+            tempTHis.initialiseUserData()
+          }
+        })
+      },
+      initialiseUserData() {
+        this.setLoggedIn(true, this.BountyContract.options.from)
+        this.setDefualt()
+      },
+      resetItems() {
+        this.loggedIn = false
+        this.items = []
+        this.SecureLS.removeAll()
+        this.items = []
+        this.items.push({
+          heading: 'Platform'
+        }, {
+          icon: 'image_search',
+          text: 'Bounties',
+          to: "/Bounties",
+          render: true
+
+        })
+      },
+      setLoggedIn(bool, address) {
+        this.SecureLS.set('loggedIn', bool);
+        this.SecureLS.set('address', address)
+      },
+      getLoggedIn() {
+        return this.SecureLS.get("loggedIn")
+      },
+      getAddress() {
+        return this.SecureLS.get("address")
+      },
+      logOut() {
+        this.resetItems()
+      },
+      logIn() {
+        this.resetItems()
+        this.init()
+      },
+      rerender() {
+
+      }
+    },
     props: {
       source: String
     }
