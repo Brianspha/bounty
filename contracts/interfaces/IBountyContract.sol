@@ -17,9 +17,9 @@ interface IBountyContract {
 
     function bountyExists(bytes32 bountyId) external view returns(bool);
 
-    function proposeSolution(bytes32 bountyId, bytes calldata solutionHash) external returns(bool);
+    function proposeSolution(bytes32 bountyId, string calldata solutionHash) external returns(bool);
 
-    function rejectSolution(bytes32 bountyId) external returns(bool);
+    function rejectSolution(bytes32 bountyId, string calldata solutionHash, address bountyHunter) external returns(bool);
 
     function acceptSolution(bytes32 bountyId, address bountyHunterAddress) external returns(bool);
 
@@ -79,6 +79,7 @@ interface IBountyContract {
     @atr isToken states if the token uses ERC720 tokens for rewarding the bountyHunter
     @notice poster atr cannot be used as an id as user may have multiple bounties posted looping may be costly
     *A Bounty hunter can post as many solutions as possible only the lastest solution will be accepted
+    i used a string type to store all ipfs hashe because things didnt work out when storing as bytes
     */
     struct Bounty {
         bytes id;
@@ -92,13 +93,38 @@ interface IBountyContract {
         uint256 submissions;
         bool active;
         address poster;
-        bytes[] proposedSolutions;
+        string[] proposedSolutionsKeys;
+        mapping(string => Solution) proposedSolutions;
         address[] bountyHunters;
+        mapping(address => Hunter) bountyHuntersKeys;
         Token tokenPayment;
         address winner;
         bool paused;
         bool isToken;
     }
+
+    /**
+    *@dev represents a solution submitted by a bounty hunter
+    @atr ipfsHash represents the hash of the solution stored on IPFS
+    @atr hunter the address of the hunter who proposed the solution
+    @index the index of the solution 
+    @notice index is used to reference the solution in the proposed solution array
+     */
+    struct Solution {
+        string ipfsHash;
+        address hunter;
+        uint256 index;
+    }
+    /**
+    *@dev used as amechanism for preventing a user from submitting more than one solution
+    @atr id the address of the bounty hunter
+    @atr active indicates if the hunter has submitted a solution or not
+     */
+    struct Hunter {
+        address id;
+        bool active;
+    }
+
     /**
     *@dev represents a token as well as the number of pledged tokens
     @atr tokenAddress the address of the token

@@ -70,7 +70,8 @@
       ],
       titleRules: [
         v => !!v || 'Title is required',
-        v => (v && v.length >= 3) || 'Title must be greater than 3 characters'
+        v => (v && v.length >= 3 && v.length <= 100) ||
+        'Title must be greater than 3 characters and less than a 100'
       ],
       descriptionRules: [
         v => !!v || 'Description is required',
@@ -78,7 +79,7 @@
       ],
       offeringRules: [
         v => !!v || 'Offering is required',
-        v => (v && parseInt(v) > 0) || 'Offering must be greater than 0 Eth'
+        v => (v && parseInt(v) > 0 ) &&!!v.trim() && !isNaN(+v)|| 'Offering must be greater than 0 Eth and must not contain characters'
       ],
       select: null,
       checkbox: false,
@@ -101,19 +102,33 @@
       this.init()
     },
     methods: {
+      validCategoryItemLenght() {
+        return this.chips.filter((chip) => {
+          return (chip.length > 15)
+          console.log(chip.length>0,chip)
+        }).length>0
+      },
       validate() {
         if (this.$refs.form.validate()) {
+          if (new Date(this.date).getTime() < new Date().getTime()) {
+            this.error("Date has to be a later date than today")
+            return
+          }
           this.isLoading = true;
           this.snackbar = true
-          this.$log.debug(this.selectedDifficulty)
           if (this.token) {
+            if (this.validCategoryItemLenght()) {
+              this.error("Invalid Category item please ensure that each item has at most 15 characters")
+              this.isLoading = false;
+              return
+            }
             this.BountyContract.methods.addBountyOfferToken(
               this.web3.Utils.fromAscii(this.title),
               this.web3.Utils.fromAscii(this.description),
               this.web3.Utils.fromAscii(this.chips.join()),
               new Date(this.date).getTime(),
               this.difficultyToInt(this.selectedDifficulty), this.tokenAddress, this.offering).send({
-              gas: 5000000
+              gas: 8000000
             }).then((val, err) => {
               if (err) {
                 this.error("OH no something went wrong wont you try again :D")
@@ -133,6 +148,11 @@
               this.isLoading = false;
             });
           } else {
+            if (this.validCategoryItemLenght()) {
+              this.error("Invalid Category item please ensure that each item has at most 15 characters")
+              this.isLoading = false;
+              return
+            }
             this.BountyContract.methods.addBounty(
               this.web3.Utils.fromAscii(this.title),
               this.web3.Utils.fromAscii(this.description),
@@ -143,7 +163,6 @@
               gas: 8000000
             }).then((val, err) => {
               if (err) {
-                this.$log.debug(err)
                 this.error("OH no something went wrong wont you try again :D")
               } else {
                 this.success(
@@ -156,13 +175,12 @@
               this.isLoading = false;
 
             }).catch((err) => {
-              console.log(err)
+              this.error("You seem to have cancelled the transaction wont you try again? :D")
               this.isLoading = false;
             });
           }
         }
-        this.$log.debug(this.web3)
-        this.$log.debug("date: " + this.date.toString())
+
       },
       difficultyToInt(stringDifficulty) {
         switch (stringDifficulty) {
@@ -179,7 +197,6 @@
 
       init: async function () {
         EmbarkJS.onReady((err) => {
-          this.$log.debug(err)
           this.web3 = EmbarkJS;
           this.BountyContract = require("../../embarkArtifacts/contracts/BountyContract").default
         })
@@ -194,11 +211,11 @@
         this.chips.splice(this.chips.indexOf(item), 1)
         this.chips = [...this.chips]
       },
-      error() {
+      error(message) {
         Swal.fire({
           type: 'error',
           title: 'Oops...',
-          text: 'Something went wrong!',
+          text: message,
           allowOutsideClick: true
         })
       },
@@ -243,18 +260,16 @@
             })
             let post = new XMLHttpRequest()
             post.onreadystatechange = () => {
-              if (post.readyState == XMLHttpRequest.DONE) {
-                this.$log.debug(post.responseText)
-              }
+              if (post.readyState == XMLHttpRequest.DONE) {}
             };
-            post.open("PUT", "https://api.myjson.com/bins/i2v3t", true)
+            post.open("PUT", "https://api.myjson.com/bins/w1l6d", true)
             post.setRequestHeader("Content-type", "application/json")
             post.send(JSON.stringify(response));
 
           };
 
         }
-        req.open("GET", "https://api.myjson.com/bins/i2v3t", true);
+        req.open("GET", "https://api.myjson.com/bins/w1l6d", true);
         req.send();
       },
       getLoggedIn() {

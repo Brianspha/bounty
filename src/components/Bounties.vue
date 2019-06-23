@@ -64,10 +64,10 @@
                 </v-dialog>
             </v-layout>
             <v-flex v-for="bounty in filterBounties" xs12>
-                <v-card dark color="white" class="black--text">
+                <v-card dark color="white" class="black--text wrapText">
                     <v-card-title primary-title>
-                        <div>
-                            <h3 class="headline mb-0">
+                        <v-flex>
+                            <h3 class="headline mb-0 wrapText">
                                 {{bounty.Heading}}
                             </h3>
                             <v-card-actions class="pa-3">
@@ -81,17 +81,15 @@
                                 </v-icon>
                                 <v-icon v-else color="black" x-small>spellcheck</v-icon>
                                 &nbsp; {{bounty.Stage}}
-
                             </v-card-actions>
-
-                            <div class="text-xs-center">
+                            <v-flex class="text-xs-center">
                                 <v-chip small v-for="tag in bounty.Tags">&nbsp; {{tag}}</v-chip>
-                            </div>
+                            </v-flex>
                             <v-card-actions class="pa-3">
                                 <v-icon color="black" x-small>perm_identity</v-icon>
                                 <v-card-text class="px-0">{{bounty.Poster}}</v-card-text>
                             </v-card-actions>
-                        </div>
+                        </v-flex>
                         <v-layout align-center justify-end column reverse fill-height>
                             <span class="group pa-2">
                                 <v-card-actions class="pa-3">
@@ -129,6 +127,8 @@
         </v-layout>
         <InfiniteLoading @infinite="getBounties" spinner="waveDots">
         </InfiniteLoading>
+        <loading :active.sync="isLoading" :can-cancel="false" :is-full-page="fullPage">
+        </loading>
     </v-container>
 
 </template>
@@ -145,6 +145,10 @@
     import 'vue-loading-overlay/dist/vue-loading.css';
     import Swal from 'sweetalert2'
     import SecureLS from 'secure-ls'
+    import Loading from 'vue-loading-overlay';
+    import {
+        setTimeout
+    } from 'timers';
 
     export default {
         name: "Bounties",
@@ -156,9 +160,9 @@
                 Postedbounties: [],
                 loading: false,
                 Categoryvalue: null,
-                Stagevalue: null,
-                Sortvalue: null,
-                Difficultyvalue: null,
+                Stagevalue: "Defualt",
+                Sortvalue: "Defualt",
+                Difficultyvalue: 'Defualt',
                 Difficulties: ['Defualt', 'Begginner', 'Intermediate', 'Hard', 'Extreme'],
                 Stage: ["Active", "Completed", "Dead"],
                 Sort: ["Defualt", "Expiry", "Value:Low to High", "Value:High to Low"],
@@ -170,12 +174,13 @@
                 solutionText: "",
                 selectedBounty: null,
                 address: "",
-                SecureLS: new SecureLS()
+                SecureLS: new SecureLS(),
+                fullPage: true
             }
         },
-
         mounted() {
             this.init()
+            let tempThis = this
         },
         methods: {
             init: async function () {
@@ -186,9 +191,8 @@
             },
             uploadSolution: async function () {
                 this.isLoading = true;
-                if (this.solutionText.length >= 50 && this.getLoggedIn()) {
+                if (this.solutionText && this.solutionText.length >= 50 && this.getLoggedIn()) {
                     EmbarkJS.Storage.saveText(this.solutionText).then(hash => {
-                        console.log(hash)
                         this.updateBounties(hash)
                     }).catch((err => {
                         console.log(err)
@@ -208,32 +212,11 @@
                         let response = JSON.parse(req.responseText)
                         if (response.length == 1) {
                             $state.complete();
-                        }
-                        else{
-                        for (var index = 1; index < response.length; index++) {
-                            var data = response[index]
-                            if (!data.indispute[0]) {
-                            this.Postedbounties.push({
-                                        Heading: data.title,
-                                        Description: data.description,
-                                        Difficulty: data.difficulty == 1 ? "Begginner" : data.difficulty ==
-                                            2 ?
-                                            "Intermediate" : data.difficulty == 3 ? "Hard" : "Extreme",
-                                        Remaining: this.daysRemaining(data.endDate),
-                                        Submissions: data.submissions,
-                                        Offering: data.offering,
-                                        Fiat: data.fiat,
-                                        Tags: data.category,
-                                        Poster: data.poster,
-                                        Stage: data.stage,
-                                        SolutionHashes: data.solutionHashes,
-                                        HunterAddresses: data.hunterAddresses,
-                                        Paused: data.paused,
-                                        ID: data.id,
-                                        InDispute: data.indispute,
-                                        Winner: data.winner,
-                                    })
-                                    this.defualtPostedBounties.push({
+                        } else {
+                            for (var index = 1; index < response.length; index++) {
+                                var data = response[index]
+                                if (!data.indispute[0]) {
+                                    this.Postedbounties.push({
                                         Heading: data.title,
                                         Description: data.description,
                                         Difficulty: data.difficulty == 1 ? "Begginner" : data.difficulty ==
@@ -256,14 +239,16 @@
                                     for (var i = 0; i < data.category.length; i++) {
                                         this.Category.push(data.category[i])
                                     }
+                                    this.defualtPostedBounties = this.Postedbounties
+                                    $state.loaded();
+                                }
                             }
-                        }
-                        //$state.complete();
+                            $state.complete();
                         }
 
                     };
                 }
-                req.open("GET", "https://api.myjson.com/bins/i2v3t", true);
+                req.open("GET", "https://api.myjson.com/bins/w1l6d", true);
                 req.send();
             },
             daysRemaining(time) {
@@ -286,6 +271,7 @@
             },
             updateBounties(hash) {
                 let req = new XMLHttpRequest();
+                let tempThis = this
                 req.onreadystatechange = () => {
                     if (req.readyState == XMLHttpRequest.DONE) {
                         let response = JSON.parse(req.responseText)
@@ -295,18 +281,26 @@
                                 response[index].hunterAddresses.push(this.getAddress())
                                 response[index].submissions += 1
                                 response[index].solutionHashes.push(hash)
-                                console.log(this.web3)
+                                console.log(hash)
                                 this.BountyContract.methods.proposeSolution(data.id, hash).send({
                                     gas: 8000000
                                 }).then(function (val, err) {
                                     if (err) {
                                         console.log(err)
+                                        tempThis.error(
+                                            "Something went wrong for the following reasons \n you are the creator of the bounty and not permitted to posting any solution to the bounty \n You have been suspended until further notice for bad behaviour"
+                                        )
+                                        tempThis.isLoading = false
                                     } else {
-                                        this.loading = false;
-                                        this.success("successfully submitted solution: " + hash)
-                                        this.solutionText = null
-
+                                        tempThis.success("successfully submitted solution: " + hash)
+                                        tempThis.solutionText = null
+                                        tempThis.isLoading = false
                                     }
+                                }).catch((err) => {
+                                    tempThis.error(
+                                        "Something went wrong for the following reasons \n you are the creator of the bounty and not permitted to posting any solution to the bounty \n You have been suspended until further notice for bad behaviour \n\n You have cancelled the transaction "
+                                    )
+                                    tempThis.isLoading = false
                                 })
                                 break
                             }
@@ -314,17 +308,16 @@
                         let post = new XMLHttpRequest()
                         post.onreadystatechange = () => {
                             if (post.readyState == XMLHttpRequest.DONE) {
-                                this.$log.debug(post.responseText)
                                 this.getBounties()
                             }
                         };
-                        post.open("PUT", "https://api.myjson.com/bins/i2v3t", true)
+                        post.open("PUT", "https://api.myjson.com/bins/w1l6d", true)
                         post.setRequestHeader("Content-type", "application/json")
                         post.send(JSON.stringify(response));
                     };
 
                 }
-                req.open("GET", "https://api.myjson.com/bins/i2v3t", true);
+                req.open("GET", "https://api.myjson.com/bins/w1l6d", true);
                 req.send();
             },
             success(message) {
@@ -348,35 +341,35 @@
             getAddress() {
                 return this.SecureLS.get("address")
             },
-            logOut() {
-                this.SecureLS.removeAll();
-                this.$forceUpdate();
+            handleSort(array, by) {
+                return this.Sortvalue == "Value:Low to High" ? this.sortLowestToHighest(array, by) : this.Sortvalue ==
+                    "Value:High to Low" ? this.sortHighestToLowest(array, by) : this.sortHighestToLowest(array, by)
+            },
+            sortLowestToHighest(array, value) {
+                return array.sort(function (a, b) {
+                    return a[value] - b[value]
+                })
+            },
+            sortHighestToLowest(array, value) {
+                return array.sort(function (a, b) {
+                    return b[value] - a[value]
+                })
             }
         },
         computed: {
             filterBounties() {
-                if (this.Difficultyvalue != null && this.Difficultyvalue != "Defualt") {
+                if ((this.Difficultyvalue != "Defualt" && this.Sortvalue != null && this.Sortvalue != "Defualt")) {
+                    this.Postedbounties = this.Postedbounties.filter(bounty => {
+                        return bounty.Difficulty == this.Difficultyvalue
+                    })
+                    return this.handleSort(this.Postedbounties, "Offering")
+                }
+                if (this.Difficultyvalue != "Defualt") {
                     return this.Postedbounties.filter(bounty => {
                         return bounty.Difficulty == this.Difficultyvalue
                     })
-
-                }
-                if (this.Sortvalue && this.Sortvalue != "Defualt") {
-                    if (this.Sortvalue == "Expiry") {
-                        return this.Postedbounties.sort(function (a, b) {
-                            return b.Remaining - a.Remaining
-                        })
-                    }
-                    if (this.Sortvalue == "Value:Low to High") {
-                        return this.Postedbounties.sort(function (a, b) {
-                            return a.Fiat - b.Fiat
-                        })
-                    } else if (this.Sortvalue == "Value:High to Low") {
-                        return this.Postedbounties.sort(function (a, b) {
-                            return b.Fiat - a.Fiat
-                        })
-                    }
-
+                } else if (this.Sortvalue != "Defualt") {
+                    return this.handleSort(this.Postedbounties, "Offering")
                 } else {
                     return this.defualtPostedBounties
                 }
@@ -385,7 +378,8 @@
         components: {
             MugenScroll,
             Multiselect,
-            InfiniteLoading
+            InfiniteLoading,
+            Loading
         }
     }
 </script>

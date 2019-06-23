@@ -5,17 +5,17 @@
         <template v-for="item in items">
           <v-layout v-if="item.heading" :key="item.heading" row align-center>
             <v-flex xs6>
-              <v-subheader v-if="item.heading">
+              <v-subheader v-if="item.heading" class="text-truncate">
                 {{ item.heading }}
               </v-subheader>
             </v-flex>
           </v-layout>
           <v-list-group v-else-if="item.children" :key="item.text" v-model="item.model"
             :prepend-icon="item.model ? item.icon : item['icon-alt']" append-icon="">
-            <template v-slot:activator>
+            <template v-slot:activator >
               <v-list-tile>
                 <v-list-tile-content>
-                  <v-list-tile-title>
+                  <v-list-tile-title class="text-truncate">
                     {{ item.text }}
                   </v-list-tile-title>
                 </v-list-tile-content>
@@ -26,7 +26,7 @@
                 <v-icon>{{ child.icon }}</v-icon>
               </v-list-tile-action>
               <v-list-tile-content v-if="child.render">
-                <v-list-tile-title>
+                <v-list-tile-title class="text-truncate">
                   {{ child.text }}
                 </v-list-tile-title>
               </v-list-tile-content>
@@ -37,7 +37,7 @@
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
-              <v-list-tile-title v-if="item.render">
+              <v-list-tile-title v-if="item.render" class="text-truncate">
                 {{ item.text }}
               </v-list-tile-title>
             </v-list-tile-content>
@@ -52,8 +52,8 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn icon large>
-        <v-avatar size="32px" tile @click="toHomepage()">
-          <img src="./images/spiderman.svg">
+        <v-avatar size="32px" tile>
+          <img src="../images/spiderman.svg">
         </v-avatar>
       </v-btn>
     </v-toolbar>
@@ -78,12 +78,10 @@
 </template>
 
 <script>
-  import EmbarkJS from "../embarkArtifacts/embarkjs";
+  import EmbarkJS from "../../embarkArtifacts/embarkjs";
   import Swal from 'sweetalert2'
   import SecureLS from 'secure-ls'
   import Vue from 'vue'
-  import Snotify from 'vue-snotify'; // 1. Import Snotify
-  Vue.use(Snotify)
 
   export default {
     name: 'app',
@@ -103,13 +101,6 @@
           to: "/Bounties",
           render: true
 
-        },
-        {
-          icon: 'whatshot',
-          text: 'Rankings',
-          to: "/Rankings",
-          render: true
-
         }
 
       ],
@@ -126,9 +117,6 @@
       }
     },
     methods: {
-      toHomepage(){
-        location.replace("/")
-      },
       difficultyToInt(stringDifficulty) {
         switch (stringDifficulty) {
           case "Begginner":
@@ -149,46 +137,25 @@
           allowOutsideClick: true
         })
       },
-      success(message) {
-        this.$snotify.success(message, {
-          timeout: 2000,
-          showProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true
-        })
-      },
-      logOutMessage(message) {
-        this.$snotify.info(message, {
-          timeout: 2000,
-          showProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true
-        })
-      },
       init: async function () {
         EmbarkJS.onReady((err) => {
           if (err) {
+            this.SecureLS.removeAll();
             this.error(
               'Platform only works with metamask enabled most features will be disabled until metamask connects to your wallet'
             )
             this.setLoggedIn(false, null)
           } else {
             this.web3 = EmbarkJS;
-            if (this.getLoggedIn()) {
-              this.initialiseUserData()
-            }
-            this.BountyContract = require("../embarkArtifacts/contracts/BountyContract").default
+            this.SecureLS.removeAll();
+            this.BountyContract = require("../../embarkArtifacts/contracts/BountyContract").default
           }
-          this.watchForAccountChanges()
         })
-
+        this.watchForAccountChanges()
       },
       watchForAccountChanges() {
         let tempThis = this
         window.ethereum.on('accountsChanged', function (accounts) {
-          tempThis.logOut()
-        })
-        window.ethereum.on('networkChanged', function (netId) {
           tempThis.logOut()
         })
         window.ethereum.on('networkChanged', function (netId) {
@@ -214,12 +181,6 @@
           icon: 'person_pin',
           text: 'Added Bounties',
           to: "/CreatedBounties",
-          render: this.getLoggedIn()
-        })
-        this.items.push({
-          icon: 'build',
-          text: 'View Solutions to Created Bounties',
-          to: "/createdbountysolutions",
           render: this.getLoggedIn()
         })
         this.items.push({
@@ -258,21 +219,19 @@
             })
           }
           tempThis.initialiseUserData()
-          location.replace("/")
         }).catch((err) => {
           this.error("Something went wrong for the following reasons You cancelled the transaction ")
         })
       },
       initialiseUserData() {
-        if (!this.getLoggedIn()) {
-          this.setLoggedIn(true, web3.eth.defaultAccount)
-        }
+        this.setLoggedIn(true, this.BountyContract.options.from)
         this.setDefualt()
-
       },
       resetItems() {
+        this.drawer = null
+        this.$forceUpdate()
         this.SecureLS.removeAll()
-        this.items = []
+        this.items=[]
         this.items.push({
           heading: 'Platform'
         }, {
@@ -280,12 +239,6 @@
           text: 'Bounties',
           to: "/Bounties",
           render: true
-        }, {
-          icon: 'whatshot',
-          text: 'Rankings',
-          to: "/Rankings",
-          render: true
-
         })
         this.loggedIn = false
         location.replace("/")
@@ -304,9 +257,8 @@
         this.resetItems()
       },
       logIn() {
-        if (!this.getLoggedIn()) {
-          this.registerUser()
-        }
+        this.resetItems()
+        this.init()
       },
       rerender() {}
     },
@@ -322,10 +274,5 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-  }
-
-  .wrapText {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
   }
 </style>

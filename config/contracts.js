@@ -101,6 +101,11 @@ module.exports = {
       type: "rpc",
       accounts: []
     },
+    contracts:{
+      BountyContract:{
+        
+      }
+    }
   }
 
   // you can name an environment with specific settings and then specify with

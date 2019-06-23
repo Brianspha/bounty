@@ -3,19 +3,15 @@
     "contracts": {
       "0xd23e69f12ea0215bd423af8aa8b23506376735d142b4ff924dfda88409711057": {
         "name": "SafeMath",
-        "address": "0x25fa4E80d4C4DFFa3d1e7620f61430727cCC67b8"
-      },
-      "0x5889e3f8bd94a584149aa32630c54e5c4364bc33e38887b469f543d95633e372": {
-        "name": "BountyContract",
-        "address": "0xb553ad4f82aBf73C1133129e33541b0B51263CF3"
+        "address": "0x35AfBA9fA6B4a1C5Eed2860D44D1f7C1E22Adef9"
       },
       "0x21a7fc2003f072488abe56f7b49add6f6d41a6cb5512e12dfd0b7729ab8ba8d8": {
         "name": "ERC720",
-        "address": "0xa4C37AFCab505C239587124142519Dea83FBfe89"
+        "address": "0x1d39769EB1D0d39f8e467290C9f67e8200A56295"
       },
-      "0x89b3dd418d4111e7093da3377ae2d89e2a502d93c0f92d287067377164d4331c": {
+      "0x170b932f20c2e880d8cc777c6687ad1c60c4b90922b1a7a09c1f2dee8a570889": {
         "name": "BountyContract",
-        "address": "0xDceD6A9831E32db4AEE9E9206AB2AfDa9A9dFfa8"
+        "address": "0x6367f58d326e3E2943eeD0b999290B004209369b"
       }
     }
   }

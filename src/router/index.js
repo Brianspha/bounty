@@ -4,6 +4,10 @@ import Pending from "../components/PendingBounties.vue";
 import AddBounty from "../components/AddBounty.vue";
 import Disputes from "../components/Disputes.vue";
 import Created from "../components/AddedBounties.vue";
+import Solutions from "../components/CreatedBountySolutions.vue";
+import Hunted from "../components/HuntedBounties.vue";
+import Rankings from "../components/Rankings.vue";
+import MessageCenter from "../components/MessageCenter.vue";
 
 import Vue from "vue"
 Vue.use(Router)
@@ -30,11 +34,26 @@ export default new Router({
             path: "/createdBounties",
             name: "CreatedBounties",
             component: Created
-        }, 
+        },
+        {
+            path: "/createdbountysolutions",
+            name: "Solutions",
+            component: Solutions
+        },
         {
             path: "/pendingBounties",
             name: "PendingBounties",
             component: Pending
+        },
+        {
+            path: "/huntedBounties",
+            name: "HuntedBounties",
+            component: Hunted
+        },
+        {
+            path: "/rankings",
+            name: "Rankings",
+            component: Rankings
         }
 
     ],

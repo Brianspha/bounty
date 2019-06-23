@@ -48,63 +48,46 @@
                 </v-dialog>
             </v-layout>
             <v-flex v-for="bounty in filterBounties" xs12>
-                <v-card dark color="white" class="black--text wrapText">
-                    <v-card-title primary-title>
-                        <v-flex>
-                            <h3 class="headline mb-0 wrapText">
-                                {{bounty.Heading}}
-                            </h3>
-                            <v-card-actions class="pa-3">
-                                <v-icon color="black" x-small>multiline_chart</v-icon>
-                                &nbsp; {{bounty.Offering}} Eth
-                            </v-card-actions>
-                            <v-card-actions class="pa-3">
-                                <v-icon v-if="bounty.Stage=='Completed'" color="black" x-small>
-                                    check_circle</v-icon>
-                                <v-icon v-if="bounty.Stage=='Dead'" color="black" x-small>offline_pin
-                                </v-icon>
-                                <v-icon v-else color="black" x-small>spellcheck</v-icon>
-                                &nbsp; {{bounty.Stage}}
+                <v-flex v-for="solution in bounty.SolutionHashes" xs12>
+                    <v-card dark color="white" class="black--text">
+                        <v-card-title primary-title>
+                            <v-flex>
+                                <h3 class="headline mb-0">
+                                    {{bounty.Heading}}
+                                </h3>
+                                <v-card-actions class="pa-3">
+                                    <v-icon color="black" x-small>multiline_chart</v-icon>
+                                    &nbsp; {{bounty.Offering}} Eth
+                                </v-card-actions>
+                                <v-card-actions class="pa-3">
+                                    <v-icon v-if="bounty.Stage=='Completed'" color="black" x-small>check_circle</v-icon>
+                                    <v-icon v-if="bounty.Stage=='Dead'" color="black" x-small>offline_pin</v-icon>
+                                    <v-icon v-else color="black" x-small>spellcheck</v-icon>
+                                    &nbsp; {{bounty.Stage}}
 
-                            </v-card-actions>
+                                </v-card-actions>
 
-                            <v-flex class="text-xs-center">
-                                <v-chip small v-for="tag in bounty.Tags">&nbsp; {{tag}}</v-chip>
+                                <div class="text-xs-center">
+                                    <v-chip small v-for="tag in bounty.Tags">&nbsp; {{tag}}</v-chip>
+                                </div>
+                                <v-card-actions class="pa-3">
+                                    <v-icon color="black" x-small>perm_identity</v-icon>
+                                    <v-card-text class="px-0">{{bounty.Poster}}</v-card-text>
+                                </v-card-actions>
                             </v-flex>
-                            <v-card-actions class="pa-3">
-                                <v-icon color="black" x-small>perm_identity</v-icon>
-                                <v-card-text class="px-0">{{bounty.Poster}}</v-card-text>
-                            </v-card-actions>
-                        </v-flex>
-                        <v-layout align-center justify-end column reverse fill-height>
-                            <span class="group pa-2">
-                                <v-card-actions class="pa-3">
-                                    <v-icon color="black" x-small>star</v-icon> Difficulty
-                                    &nbsp; {{bounty.Difficulty}}
-                                </v-card-actions>
-                                <v-card-actions class="pa-3">
-                                    <v-icon color="black" x-small>calendar_today</v-icon>
-                                    &nbsp; {{bounty.Remaining}} Days Remaining
-                                </v-card-actions>
-                                <v-card-actions class="pa-3">
-                                    <v-icon color="black" x-small>gavel</v-icon>
-                                    &nbsp; {{bounty.Submissions}} Submissions
-                                </v-card-actions>
-                                <v-card-actions class="pa-3">
-                                    <v-icon color="black" x-small>monetization_on</v-icon>
-                                    &nbsp; R {{bounty.Fiat}}
-                                </v-card-actions>
-                            </span>
-                        </v-layout>
-                    </v-card-title>
-                    <v-card-actions>
-                        <v-btn flat color="black" @click="descriptionDialogue=true;  description=bounty.Description">
-                            Details
-                        </v-btn>
-
-                        <v-spacer></v-spacer>
-                    </v-card-actions>
-                </v-card>
+                        </v-card-title>
+                        <v-card-actions>
+                            <v-btn flat color="black"
+                                @click="descriptionDialogue=true; description=solution; getSolution()">
+                                Solution
+                            </v-btn>
+                            <v-spacer></v-spacer>
+                            <v-btn flat color="black"
+                                @click="selectedBounty=bounty; descriptionDialogue=true;description=bounty.Description; ">
+                                Details</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-flex>
             </v-flex>
         </v-layout>
         <InfiniteLoading @infinite="getBounties" spinner="waveDots">
@@ -128,15 +111,15 @@
     import SecureLS from 'secure-ls'
 
     export default {
-        name: "AddedBounties",
+        name: "HuntedBounties",
         data() {
             return {
                 dialog: false,
                 Postedbounties: [],
                 loading: false,
                 Categoryvalue: null,
-                Stagevalue: null,
-                Sortvalue: 'Defualt',
+                Stagevalue: "Defualt",
+                Sortvalue: "Defualt",
                 Difficultyvalue: 'Defualt',
                 Difficulties: ['Defualt', 'Begginner', 'Intermediate', 'Hard', 'Extreme'],
                 Stage: ["Active", "Completed", "Dead"],
@@ -150,8 +133,13 @@
                 selectedBounty: {},
                 address: null,
                 SecureLS: new SecureLS(),
+                isLoading: false,
                 fullPage: true,
-                isLoading: false
+                TotalEarnings: 0,
+                Ranking: 0,
+                TotalEarningsEther: 0,
+                fullPage: true
+
 
             }
         },
@@ -184,11 +172,26 @@
             }
         },
         methods: {
+            handleSort(array, by) {
+                return this.Sortvalue == "Value:Low to High" ? this.sortLowestToHighest(array, by) : this.Sortvalue ==
+                    "Value:High to Low" ? this.sortHighestToLowest(array, by) : this.sortHighestToLowest(array, by)
+            },
+            sortLowestToHighest(array, value) {
+                return array.sort(function (a, b) {
+                    return a[value] - b[value]
+                })
+            },
+            sortHighestToLowest(array, value) {
+                return array.sort(function (a, b) {
+                    return b[value] - a[value]
+                })
+            },
             init: async function () {
 
                 this.web3 = EmbarkJS;
                 this.BountyContract = require("../../embarkArtifacts/contracts/BountyContract").default
                 this.address = this.getAddress()
+
             },
             getBounties($state) {
                 let req = new XMLHttpRequest();
@@ -200,7 +203,7 @@
                         } else {
                             for (var index = 1; index < response.length; index++) {
                                 var data = response[index]
-                                if (data.poster == this.getAddress()) {
+                                if (data.winner == this.address) {
                                     this.Postedbounties.push({
                                         Heading: data.title,
                                         Description: data.description,
@@ -224,9 +227,11 @@
                                     for (var i = 0; i < data.category.length; i++) {
                                         this.Category.push(data.category[i])
                                     }
+                                    this.TotalEarnings += data.fiat
                                 }
                                 $state.loaded();
                                 this.defualtPostedBounties = this.Postedbounties
+
                             }
                             $state.complete();
                         }
@@ -247,9 +252,12 @@
             daysRemaining(time) {
                 var date_future = new Date(new Date(time).getFullYear() + 1, 0, 1);
                 var date_now = new Date();
-                const diffTime = Math.abs(date_now.getTime() - date_future.getTime());
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                return diffDays
+
+                var seconds = Math.floor((date_future - (date_now)) / 1000);
+                var minutes = Math.floor(seconds / 60);
+                var hours = Math.floor(minutes / 60);
+                var days = Math.floor(hours / 24);
+                return days
             },
             exists(array1, array2) {
                 array1.forEach(item => {
@@ -260,67 +268,26 @@
                     })
                 })
             },
-            updateBounties() {
-                let req = new XMLHttpRequest()
-                req.onreadystatechange = () => {
-                    if (req.readyState == XMLHttpRequest.DONE) {
-                        let data = JSON.parse(req.responseText)
-                        for (var i = 0; i < data.length; i++) {
-                            let bounty = data[i]
-                            if (bounty.id == selectedBounty.id) {
-                                data[i].stage = "Completed"
-                                break
-                            }
-                        }
-                        let post = new XMLHttpRequest()
-                        post.onreadystatechange = () => {
-                            if (post.readyState == XMLHttpRequest.DONE) {}
-                        };
-                        post.open("PUT", "https://api.myjson.com/bins/w1l6d", true)
-                        post.setRequestHeader("Content-type", "application/json")
-                        post.send(JSON.stringify(data));
-                    }
-                }
-                req.open("GET", "https://api.myjson.com/bins/w1l6d", true)
-                req.send()
-            },
-            acceptSolution() {
-                this.BountyContract.methods.acceptSolution(
-                    (this.selectedBounty.id)).send({
-                    gas: 5000000
-                }).then((val, err) => {
-                    if (err) {
-                        this.error("OH no something went wrong wont you try again :D")
-                    } else {
-
-                        this.success(
-                            "Successfully accepted Bounty please see if it appears under the bounties section of the platform"
-                        )
-
-                    }
-                    this.isLoading = false;
-
-                });
-            },
             getLoggedIn() {
                 return this.SecureLS.get("loggedIn")
             },
             getAddress() {
                 return this.SecureLS.get("address")
             },
-            handleSort(array, by) {
-                return this.Sortvalue == "Value:Low to High" ? this.sortLowestToHighest(array, by) : this.Sortvalue ==
-                    "Value:High to Low" ? this.sortHighestToLowest(array, by) : this.sortHighestToLowest(array, by)
-            },
-            sortLowestToHighest(array, value) {
-                return array.sort(function (a, b) {
-                    return a[value] - b[value]
+            error(message) {
+                Swal.fire({
+                    type: 'error',
+                    title: 'Oops...',
+                    text: message,
+                    allowOutsideClick: true
                 })
             },
-            sortHighestToLowest(array, value) {
-                return array.sort(function (a, b) {
-                    return b[value] - a[value]
-                })
+            success(message) {
+                Swal.fire(
+                    'Success',
+                    message,
+                    'success'
+                )
             }
 
         }

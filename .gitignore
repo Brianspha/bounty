@@ -5,7 +5,7 @@ node_modules
 .embark
 # local env files
 .env.local
-.env.*.local
+.env.*.loca
 
 # Log files
 npm-debug.log*

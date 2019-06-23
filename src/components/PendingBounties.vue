@@ -51,7 +51,7 @@
                 <v-flex v-for="solution in bounty.SolutionHashes" xs12>
                     <v-card dark color="white" class="black--text">
                         <v-card-title primary-title>
-                            <div>
+                            <v-flex>
                                 <h3 class="headline mb-0">
                                     {{bounty.Heading}}
                                 </h3>
@@ -70,11 +70,11 @@
                                 <div class="text-xs-center">
                                     <v-chip small v-for="tag in bounty.Tags">&nbsp; {{tag}}</v-chip>
                                 </div>
-                                <v-card-actions class="pa-3">
+                                <v-flex class="pa-3 text-truncate">
                                     <v-icon color="black" x-small>perm_identity</v-icon>
                                     <v-card-text class="px-0">{{bounty.Poster}}</v-card-text>
-                                </v-card-actions>
-                            </div>
+                                </v-flex>
+                            </v-flex>
                         </v-card-title>
                         <v-card-actions>
                             <v-btn flat color="black"
@@ -82,7 +82,7 @@
                                 Details
                             </v-btn>
                             <v-spacer></v-spacer>
-                            <v-btn flat color="black" @click="selectedBounty=bounty; acceptSolution(); ">Accept</v-btn>
+                            <v-btn flat color="black" @click="selectedBounty=bounty; disputeBounty(); ">Dispute</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-flex>
@@ -90,6 +90,8 @@
         </v-layout>
         <InfiniteLoading @infinite="getBounties" spinner="waveDots">
         </InfiniteLoading>
+        <loading :active.sync="isLoading" :can-cancel="false" :is-full-page="fullPage">
+        </loading>
     </v-container>
 
 </template>
@@ -114,9 +116,9 @@
                 Postedbounties: [],
                 loading: false,
                 Categoryvalue: null,
-                Stagevalue: null,
-                Sortvalue: null,
-                Difficultyvalue: null,
+                Stagevalue: "Defualt",
+                Sortvalue: "Defualt",
+                Difficultyvalue: 'Defualt',
                 Difficulties: ['Defualt', 'Begginner', 'Intermediate', 'Hard', 'Extreme'],
                 Stage: ["Active", "Completed", "Dead"],
                 Sort: ["Defualt", "Expiry", "Value:Low to High", "Value:High to Low"],
@@ -128,7 +130,10 @@
                 BountyContract: null,
                 selectedBounty: {},
                 address: null,
-                SecureLS: new SecureLS()
+                SecureLS: new SecureLS(),
+                isLoading: false,
+                fullPage: true
+
 
             }
         },
@@ -138,43 +143,47 @@
         components: {
             MugenScroll,
             Multiselect,
-            InfiniteLoading
+            InfiniteLoading,
+            Loading
         },
         computed: {
             filterBounties() {
-                if (this.Difficultyvalue != null && this.Difficultyvalue != "Defualt") {
+                if ((this.Difficultyvalue != "Defualt" && this.Sortvalue != null && this.Sortvalue != "Defualt")) {
+                    this.Postedbounties = this.Postedbounties.filter(bounty => {
+                        return bounty.Difficulty == this.Difficultyvalue
+                    })
+                    return this.handleSort(this.Postedbounties, "Offering")
+                }
+                if (this.Difficultyvalue != "Defualt") {
                     return this.Postedbounties.filter(bounty => {
                         return bounty.Difficulty == this.Difficultyvalue
                     })
-
-                }
-                if (this.Sortvalue && this.Sortvalue != "Defualt") {
-                    if (this.Sortvalue == "Expiry") {
-                        return this.Postedbounties.sort(function (a, b) {
-                            return b.Remaining - a.Remaining
-                        })
-                    }
-                    if (this.Sortvalue == "Value:Low to High") {
-                        return this.Postedbounties.sort(function (a, b) {
-                            return a.Fiat - b.Fiat
-                        })
-                    } else if (this.Sortvalue == "Value:High to Low") {
-                        return this.Postedbounties.sort(function (a, b) {
-                            return b.Fiat - a.Fiat
-                        })
-                    }
-
+                } else if (this.Sortvalue != "Defualt") {
+                    return this.handleSort(this.Postedbounties, "Offering")
                 } else {
                     return this.defualtPostedBounties
                 }
             }
         },
         methods: {
+            handleSort(array, by) {
+                return this.Sortvalue == "Value:Low to High" ? this.sortLowestToHighest(array, by) : this.Sortvalue ==
+                    "Value:High to Low" ? this.sortHighestToLowest(array, by) : this.sortHighestToLowest(array, by)
+            },
+            sortLowestToHighest(array, value) {
+                return array.sort(function (a, b) {
+                    return a[value] - b[value]
+                })
+            },
+            sortHighestToLowest(array, value) {
+                return array.sort(function (a, b) {
+                    return b[value] - a[value]
+                })
+            },
             init: async function () {
 
                 this.web3 = EmbarkJS;
                 this.BountyContract = require("../../embarkArtifacts/contracts/BountyContract").default
-                this.loggedIn = this.$loggedIn
                 this.address = this.getAddress()
 
             },
@@ -189,27 +198,7 @@
                             for (var index = 1; index < response.length; index++) {
                                 var data = response[index]
                                 if (data.hunterAddresses.includes(this.address)) {
-                                   this.Postedbounties.push({
-                                        Heading: data.title,
-                                        Description: data.description,
-                                        Difficulty: data.difficulty == 1 ? "Begginner" : data.difficulty ==
-                                            2 ?
-                                            "Intermediate" : data.difficulty == 3 ? "Hard" : "Extreme",
-                                        Remaining: this.daysRemaining(data.endDate),
-                                        Submissions: data.submissions,
-                                        Offering: data.offering,
-                                        Fiat: data.fiat,
-                                        Tags: data.category,
-                                        Poster: data.poster,
-                                        Stage: data.stage,
-                                        SolutionHashes: data.solutionHashes,
-                                        HunterAddresses: data.hunterAddresses,
-                                        Paused: data.paused,
-                                        ID: data.id,
-                                        InDispute: data.indispute,
-                                        Winner: data.winner,
-                                    })
-                                    this.defualtPostedBounties.push({
+                                    this.Postedbounties.push({
                                         Heading: data.title,
                                         Description: data.description,
                                         Difficulty: data.difficulty == 1 ? "Begginner" : data.difficulty ==
@@ -233,15 +222,15 @@
                                         this.Category.push(data.category[i])
                                     }
                                 }
-                                //$state.loaded();
-
+                                this.defualtPostedBounties = this.Postedbounties
+                                $state.loaded();
                             }
                             $state.complete();
                         }
                     };
 
                 }
-                req.open("GET", "https://api.myjson.com/bins/i2v3t", true);
+                req.open("GET", "https://api.myjson.com/bins/w1l6d", true);
                 req.send();
             },
             getSolution: async function () {
@@ -275,33 +264,32 @@
                 let req = new XMLHttpRequest()
                 req.onreadystatechange = () => {
                     if (req.readyState == XMLHttpRequest.DONE) {
-                        this.$log.debug(JSON.parse(req.responseText))
                         let data = JSON.parse(req.responseText)
-                        for (var i = 0; i < data.length; i++) {
+                        for (var i = 1; i < data.length; i++) {
                             let bounty = data[i]
-                            this.$log.debug(this.BountyContract)
-                            if (bounty.id == selectedBounty.id) {
-                                data[i].stage = "Completed"
+                            if (bounty.id == this.selectedBounty.ID) {
+                                data[i].indispute[0] = true
+                                data[i].indispute[1].push(this.getAddress())
                                 break
                             }
                         }
                         let post = new XMLHttpRequest()
                         post.onreadystatechange = () => {
-                            if (post.readyState == XMLHttpRequest.DONE) {
-                                this.$log.debug(post.responseText)
-                            }
+                            if (post.readyState == XMLHttpRequest.DONE) {}
                         };
-                        post.open("PUT", "https://api.myjson.com/bins/i2v3t", true)
+                        post.open("PUT", "https://api.myjson.com/bins/w1l6d", true)
                         post.setRequestHeader("Content-type", "application/json")
                         post.send(JSON.stringify(data));
                     }
                 }
-                req.open("GET", "https://api.myjson.com/bins/i2v3t", true)
+                req.open("GET", "https://api.myjson.com/bins/w1l6d", true)
                 req.send()
             },
-            acceptSolution() {
-                this.BountyContract.methods.acceptSolution(
-                    (this.selectedBounty.id)).send({
+            disputeBounty() {
+                let tempThis = this
+                this.isLoading = true
+                this.BountyContract.methods.pauseBounty(
+                    (this.selectedBounty.ID)).send({
                     gas: 5000000
                 }).then((val, err) => {
                     if (err) {
@@ -309,13 +297,18 @@
                     } else {
 
                         this.success(
-                            "Successfully accepted Bounty please see if it appears under the bounties section of the platform"
+                            "Successfully submitted bounty"
                         )
+                        this.updateBounties()
 
-                        this.$log.debug(val)
                     }
                     this.isLoading = false;
 
+                }).catch((err) => {
+                    this.error(
+                        "The transaction failed for the following reasons \n You cancelled the transaction \n The bounty is already in a dispute"
+                    )
+                    this.isLoading = false
                 });
             },
             getLoggedIn() {
@@ -324,6 +317,21 @@
             getAddress() {
                 return this.SecureLS.get("address")
             },
+            error(message) {
+                Swal.fire({
+                    type: 'error',
+                    title: 'Oops...',
+                    text: message,
+                    allowOutsideClick: true
+                })
+            },
+            success(message) {
+                Swal.fire(
+                    'Success',
+                    message,
+                    'success'
+                )
+            }
 
         }
     }
