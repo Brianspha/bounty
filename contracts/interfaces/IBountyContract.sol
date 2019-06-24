@@ -95,8 +95,8 @@ interface IBountyContract {
         address poster;
         string[] proposedSolutionsKeys;
         mapping(string => Solution) proposedSolutions;
-        address[] bountyHunters;
-        mapping(address => Hunter) bountyHuntersKeys;
+        address[] bountyHuntersKeys;
+        mapping(address => Hunter) bountyHunters;
         Token tokenPayment;
         address winner;
         bool paused;

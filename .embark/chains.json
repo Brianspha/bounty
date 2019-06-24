@@ -3,15 +3,215 @@
     "contracts": {
       "0xd23e69f12ea0215bd423af8aa8b23506376735d142b4ff924dfda88409711057": {
         "name": "SafeMath",
-        "address": "0x35AfBA9fA6B4a1C5Eed2860D44D1f7C1E22Adef9"
-      },
-      "0x21a7fc2003f072488abe56f7b49add6f6d41a6cb5512e12dfd0b7729ab8ba8d8": {
-        "name": "ERC720",
-        "address": "0x1d39769EB1D0d39f8e467290C9f67e8200A56295"
+        "address": "0xb596b9832742a09f86a8b52163519A751c263D8f"
       },
       "0x170b932f20c2e880d8cc777c6687ad1c60c4b90922b1a7a09c1f2dee8a570889": {
         "name": "BountyContract",
-        "address": "0x6367f58d326e3E2943eeD0b999290B004209369b"
+        "address": "0xF17831d131F1610873eF62e1Bc22511BbFb49875"
+      },
+      "0x21a7fc2003f072488abe56f7b49add6f6d41a6cb5512e12dfd0b7729ab8ba8d8": {
+        "name": "ERC720",
+        "address": "0xCb3402f0931f248C6622C792184d9B4673365144"
+      },
+      "0x8a56d384bacb3bce5f25fa045bfbeb74da4f1cdf2ca5cef2ef38a9cd0b97ab44": {
+        "name": "BountyContract",
+        "address": "0x711B5405Ad65B6ac135C1c5f23C6F02Bf13d9bDb"
+      },
+      "0x7434bddf52ab68d735accf3021533ee4598c04fb9b590f3a8fb093a1fd7c4531": {
+        "name": "BountyContract",
+        "address": "0x0CC351C04D3642095aCBd8C6EC5F5d3aB99b2F86"
+      },
+      "0xe31c802f7081490a07af05c21009c0308b9c8bc09b812f57dfe591e4205b11f2": {
+        "name": "BountyContract",
+        "address": "0x4C75fCf215Ff8689a12081249fe60b9d4786E984"
+      },
+      "0x4c59549b68de24803c5c09994bf961fdc41df6566d9bdc4b158faaf257d42ea9": {
+        "name": "BountyContract",
+        "address": "0x95852bbA85598bfbD009cE94A13B06606f4F2d51"
+      },
+      "0x8b29b9973a5b1946648da8f8c233afbdf0d15b105476a3b00018d3577dca8364": {
+        "name": "BountyContract",
+        "address": "0xb67EAD4a99a0C9b2C676E5b8ebae66294A4746b9"
+      },
+      "0x555783519dbbe1db4fa1227265709ced537989ebbb40b4c2cdde3b3e501926bc": {
+        "name": "BountyContract",
+        "address": "0xC22aA433E535A0fFcb7c29cf429E468f093d2855"
+      }
+    }
+  },
+  "0xfd09e52da2160ba2f8ee567b6ea4a6bdb8bb860595195254044a6a46a0966834": {
+    "contracts": {
+      "0xd23e69f12ea0215bd423af8aa8b23506376735d142b4ff924dfda88409711057": {
+        "name": "SafeMath",
+        "address": "0x2a759C99635E005fF0a68BB8abdd06F174783a2E"
+      },
+      "0x21a7fc2003f072488abe56f7b49add6f6d41a6cb5512e12dfd0b7729ab8ba8d8": {
+        "name": "ERC720",
+        "address": "0x6020928E7302716c043F487D19baFD8Ca4bDbB27"
+      }
+    }
+  },
+  "0xb7bcf19aa90153faecff036da119ebf289a0a3fed407e914f2dbf64ec3b3d07c": {
+    "contracts": {
+      "0xd23e69f12ea0215bd423af8aa8b23506376735d142b4ff924dfda88409711057": {
+        "name": "SafeMath",
+        "address": "0x0fA8407bF73AB04BCad2E1B03c5D3EDeE9172954"
+      },
+      "0x21a7fc2003f072488abe56f7b49add6f6d41a6cb5512e12dfd0b7729ab8ba8d8": {
+        "name": "ERC720",
+        "address": "0x4776255268517f130238952Fd4471D6E3227B18d"
+      },
+      "0x555783519dbbe1db4fa1227265709ced537989ebbb40b4c2cdde3b3e501926bc": {
+        "name": "BountyContract",
+        "address": "0xB8A00516475791Fa86D7084F0E859B60f0186BE5"
+      },
+      "0x7494559b5223d472208ee980b0f861bd98b05058f089dce7c279331432f21c8e": {
+        "name": "BountyContract",
+        "address": "0x00D3E9B15b779A4000FdA91F1597Eb6BEd288839"
+      },
+      "0x5ad0c6e1e433d32bb21d9f7de4500c7e2eb749a941349b361884970f38e3b88b": {
+        "name": "ERC720",
+        "address": "0xe4C379C7F32Cfa11FFC248453Fd1b77356350e67"
+      },
+      "0x05830fe13ef627d536a5f5f219442d3729ca4226d5d65307d82f0034dd13d71d": {
+        "name": "SafeMath",
+        "address": "0x0fA8407bF73AB04BCad2E1B03c5D3EDeE9172954"
+      },
+      "0x59762fcb9297c8bdb2c0417e9dbbae11a23fb0dd61ff59e8960a63813b9d3d72": {
+        "name": "ERC720",
+        "address": "0x4776255268517f130238952Fd4471D6E3227B18d"
+      },
+      "0x8f0f198deb824badc956100693ef6965c7809fc21d9b0d37927a20c50ab71160": {
+        "name": "BountyContract",
+        "address": "0xc27e221E969FB9AF188A72BC9Ea4a5511D856d60"
+      },
+      "0x3c9b768486818a5c2708a36889b5f892911bc4e202f489b67db0ee1c6f468394": {
+        "name": "SafeMath",
+        "address": "0xCA8E74252bC91C7A6F9DEB10f117BC8021D954A9"
+      },
+      "0xdc158af82f4ae4dd64c2ba6223842480ba6676a3d39a6e65b13398f2e1b5aef6": {
+        "name": "ERC720",
+        "address": "0x1825c2F661E1A260Fef90B49A999945eEf13cFBB"
+      },
+      "0x007915850ff5f734279d73bf6813d9c4939e35983f4401d4c686a819ee956af5": {
+        "name": "BountyContract",
+        "address": "0xBdd4Dd4BF4784cfEF30e469a4C7E9FD1574fE437"
+      },
+      "0xfae16428ea6833fdc2c366ba03571ad37cb6b8a6d3dbf631cef70bf992f0ced2": {
+        "name": "BountyContract",
+        "address": "0xEE8EfF98A8CC08882C9Af6c35762caddf55e7547"
+      },
+      "0xcfa87c5262907e9565a5468bba80cf1ebcf68f725c0d4f385dfa4f4f24eca03e": {
+        "name": "BountyContract",
+        "address": "0x3F2f178196eef419686e4Dc4E002087aB5b6Cc54"
+      },
+      "0xdc89ef6587f5c956ccb7d378fcd7eb3fcaffb0b7c567e2c5f0ff1e813c614fdc": {
+        "name": "BountyContract",
+        "address": "0x3A86755b2387a343aE19A0fD3139CA21b6Aa3864"
+      },
+      "0x6e2f80691c830881141e092502d5582139cc14e6d572219dc009aa0fcec94079": {
+        "name": "BountyContract",
+        "address": "0xbEf285e4863bFB8F860AF7dcfDDa2d437e1d1eC0"
+      },
+      "0x6874a40c5df8cbe0f8f54235f73b4b3eebe7616286ef6e66f1f815eba5252033": {
+        "name": "BountyContract",
+        "address": "0x5cD15671C9F91404B21671Cf4B5edc04cEb3de07"
+      },
+      "0x80a12586d4fcccbf2e5b627a8ed6a72c5df731047a6fffcfe4ef3e6e8e4df09d": {
+        "name": "BountyContract",
+        "address": "0x5E6527142c4633761320b925a9d0FEA405030b5a"
+      },
+      "0xba303e1775d3c23f7bb100401ae4cb1ae135102db59054b15cfd743a826442ed": {
+        "name": "BountyContract",
+        "address": "0x8e3947D9Ba34dfc55Ac42994ad34D34B2d6DC7dc"
+      },
+      "0xd5da804f094db4a9d1fa97463afc6b4611ad62d0b02684efc0c5f2b0eae62a7b": {
+        "name": "BountyContract",
+        "address": "0x0d437C5322A2c160383c9F3da24023945355e526"
+      },
+      "0xbde007a39ea42683b72bac6655cc5d43ab35028156009fe5429519b7f104d14d": {
+        "name": "BountyContract",
+        "address": "0x9eB5466aE82CD18E4FbEb762921842C787Bd6Fa1"
+      },
+      "0xe3d563fe62cd22c82b6391232a9166f49bb8073e15151aedeedfe12247a09709": {
+        "name": "BountyContract",
+        "address": "0xccBab695E482BaE2BEA647185Ad62b457729fA61"
+      },
+      "0x525856354a233daa3428fe5993d82ec99a0b3a52a1d18584afe5bec0ec00468b": {
+        "name": "BountyContract",
+        "address": "0xC2834b4381D181b3c5306ef8D1a2a5c27e0921d2"
+      },
+      "0xc5272ada491e59941ce0939348c419d39d46a183624f4a26f9c92f0a6d21bf09": {
+        "name": "BountyContract",
+        "address": "0x3D2a674dc949C93Fc10Bd428e6D4dC64a208E3ed"
+      },
+      "0x73792b20044a943d8884171e65d558fcceb67768d5333289bf085a7450c86e04": {
+        "name": "BountyContract",
+        "address": "0xA68B1a39d5b44E9Bc9Da7726bAa4383096C0A3fc"
+      },
+      "0xe2a492284ce7b120a1a2309185687b9106b427e0b7a31f66f92f41b54c40195c": {
+        "name": "BountyContract",
+        "address": "0x8A57BC223CE9D38066c51ED2Be28C45A0Ec0f7f5"
+      },
+      "0x91e010ff11039f087a936717dc7c310e379f4d88ed56ed3c010ac1d33e7a10d4": {
+        "name": "BountyContract",
+        "address": "0xDe685A045620E040552535236D1872D2e7734050"
+      },
+      "0xbcdff40937237a45e0dbe877b75a6234efb06fff20070e3c12a8da83e4882bfc": {
+        "name": "BountyContract",
+        "address": "0x637C1444cF19c6b59DbC9a605123E2CbdB26a2e2"
+      },
+      "0x98d29bc6683aab155e5f37cf46746956428835a5f27bc407b4d23d2e4c53fea7": {
+        "name": "BountyContract",
+        "address": "0x580b7164101287AE8Fc3E8135C16456d08996f41"
+      },
+      "0xb8748b432af9c60e58966aeb62603a3a805c38c78af2bc6fc9f44c434c96903a": {
+        "name": "BountyContract",
+        "address": "0x33e6C6e1C37A09061623229366090ed484F48d4f"
+      },
+      "0x37f51f81a3358c747d7f57d98e1c1a0e30ae94c059f18b133d96b1f9436e9b09": {
+        "name": "BountyContract",
+        "address": "0xB8A00516475791Fa86D7084F0E859B60f0186BE5"
+      },
+      "0x24d05dda0cc01a7387b2d41f001c7ca615e5ea93b658bddb636c18b972b93e6d": {
+        "name": "BountyContract",
+        "address": "0x00D3E9B15b779A4000FdA91F1597Eb6BEd288839"
+      }
+    }
+  },
+  "0x3a10a27f28232cc7b9e12949489334cc95847dbf23fb7c19ea9bdf4f65f94d5d": {
+    "contracts": {
+      "0x37f51f81a3358c747d7f57d98e1c1a0e30ae94c059f18b133d96b1f9436e9b09": {
+        "name": "BountyContract",
+        "address": "0x4407f768da6F908abEE2B3B063DF5ba216a97B55"
+      }
+    }
+  },
+  "0x8a91668f8dc0f39663f064c4c25bcd374bd489b5edb20532544f83d307c4873c": {
+    "contracts": {
+      "0x05830fe13ef627d536a5f5f219442d3729ca4226d5d65307d82f0034dd13d71d": {
+        "name": "SafeMath",
+        "address": "0xaF9B268aE8b951a5F8e31d90B180382887f19eDE"
+      },
+      "0x59762fcb9297c8bdb2c0417e9dbbae11a23fb0dd61ff59e8960a63813b9d3d72": {
+        "name": "ERC720",
+        "address": "0x80E2da2898dc4329b78C53DE1318d5206bda60BC"
+      }
+    }
+  },
+  "0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d": {
+    "contracts": {
+      "0x05830fe13ef627d536a5f5f219442d3729ca4226d5d65307d82f0034dd13d71d": {
+        "name": "SafeMath",
+        "address": "0x395B3e01097021b246F04475B4164431f16D65ef"
+      },
+      "0x59762fcb9297c8bdb2c0417e9dbbae11a23fb0dd61ff59e8960a63813b9d3d72": {
+        "name": "ERC720",
+        "address": "0xc238B173d731e761Acb87115e2797bdD52d56329"
+      },
+      "0x24d05dda0cc01a7387b2d41f001c7ca615e5ea93b658bddb636c18b972b93e6d": {
+        "name": "BountyContract",
+        "address": "0x7904f3dcF5aD2957daB2456155F1ed3Fa73103f6"
       }
     }
   }

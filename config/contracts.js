@@ -99,11 +99,16 @@ module.exports = {
       port: false,
       protocol: 'https',
       type: "rpc",
-      accounts: []
+      accounts: [{
+        mnemonic: process.env.MNEUMONIC,
+        addressIndex: "0", // Optional. The index to start getting the address
+        numAddresses: "10"
+      }]
     },
-    contracts:{
-      BountyContract:{
-        
+    gas: "auto",
+    contracts: {
+      BountyContract: {
+
       }
     }
   }

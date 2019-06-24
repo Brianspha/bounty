@@ -149,7 +149,7 @@
     import {
         setTimeout
     } from 'timers';
-
+/* eslint-disable */
     export default {
         name: "Bounties",
         data() {
@@ -248,7 +248,7 @@
 
                     };
                 }
-                req.open("GET", "https://api.myjson.com/bins/w1l6d", true);
+                req.open("GET", "https://api.myjson.com/bins/13mpql", true);
                 req.send();
             },
             daysRemaining(time) {
@@ -311,13 +311,13 @@
                                 this.getBounties()
                             }
                         };
-                        post.open("PUT", "https://api.myjson.com/bins/w1l6d", true)
+                        post.open("PUT", "https://api.myjson.com/bins/13mpql", true)
                         post.setRequestHeader("Content-type", "application/json")
                         post.send(JSON.stringify(response));
                     };
 
                 }
-                req.open("GET", "https://api.myjson.com/bins/w1l6d", true);
+                req.open("GET", "https://api.myjson.com/bins/13mpql", true);
                 req.send();
             },
             success(message) {

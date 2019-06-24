@@ -74,6 +74,8 @@
         </v-container>
       </v-content>
     </main>
+    <loading :active.sync="isLoading" :can-cancel="false" :is-full-page="fullPage">
+    </loading>
   </v-app>
 </template>
 
@@ -82,16 +84,23 @@
   import Swal from 'sweetalert2'
   import SecureLS from 'secure-ls'
   import Vue from 'vue'
+  import Loading from 'vue-loading-overlay';
+  // Import stylesheet
+  import 'vue-loading-overlay/dist/vue-loading.css';
   import Snotify from 'vue-snotify'; // 1. Import Snotify
   Vue.use(Snotify)
 
   export default {
     name: 'app',
-    components: {},
+    components: {
+      Loading
+    },
     data: () => ({
       dialog: false,
       drawer: null,
       web3: null,
+      isLoading: false,
+      fullPage: true,
       BountyContract: null,
       items: [{
           heading: 'Platform',
@@ -114,10 +123,12 @@
 
       ],
       loggedIn: false,
-      SecureLS: new SecureLS()
+      SecureLS: new SecureLS(),
+      canLogin: false
     }),
     beforeMount() {},
     mounted() {
+
       this.init();
     },
     watch: {
@@ -126,7 +137,7 @@
       }
     },
     methods: {
-      toHomepage(){
+      toHomepage() {
         location.replace("/")
       },
       difficultyToInt(stringDifficulty) {
@@ -168,18 +179,20 @@
       init: async function () {
         EmbarkJS.onReady((err) => {
           if (err) {
-            this.error(
-              'Platform only works with metamask enabled most features will be disabled until metamask connects to your wallet'
+            this.errorWithFooter(
+              "<a href='https://metamask.io/;';>Please visit their website for instructions of how to download it</a>",
+              'MetaMask is not installed!'
             )
             this.setLoggedIn(false, null)
           } else {
+            this.canLogin = true
             this.web3 = EmbarkJS;
             if (this.getLoggedIn()) {
               this.initialiseUserData()
             }
             this.BountyContract = require("../embarkArtifacts/contracts/BountyContract").default
+            this.watchForAccountChanges()
           }
-          this.watchForAccountChanges()
         })
 
       },
@@ -193,6 +206,14 @@
         })
         window.ethereum.on('networkChanged', function (netId) {
           tempThis.logOut()
+        })
+      },
+      errorWithFooter(footerMessage, text) {
+        Swal.fire({
+          type: 'error',
+          title: 'OH Noo',
+          text: text,
+          footer: footerMessage
         })
       },
       setDefualt() {
@@ -234,33 +255,35 @@
           to: "/PendingBounties",
           render: this.getLoggedIn()
         })
+     this.items.push({
+          icon: 'done_all',
+          text: 'View Completed Bounties',
+          to: "/HuntedBounties",
+          render: this.getLoggedIn()
+        })
       },
       registerUser() {
         let tempThis = this;
+        this.isLoading = true
         this.BountyContract.methods.userExists().call({
           gas: 8000000
         }).then(function (val, err) {
           if (err) {
             console.log(err)
+            tempThis.initialiseUserData()
           } else if (!val) {
-            tempThis.BountyContract.methods.registerUser().send({
-              gas: 8000000
-            }).then(function (val, err) {
-              if (err) {
-                console.log(err)
-              } else {
-                tempThis.initialiseUserData()
-              }
-            }).catch((err) => {
-              this.error(
-                "Something went wrong for the following reasons You cancelled the transaction You currently suspended for bad behaviour on the platform"
-              )
-            })
+            tempThis.registerNewUser()
+          } else {
+            tempThis.initialiseUserData()
+            tempThis.isLoading = false
+            location.replace("/")
+
           }
-          tempThis.initialiseUserData()
-          location.replace("/")
+
         }).catch((err) => {
           this.error("Something went wrong for the following reasons You cancelled the transaction ")
+          this.isLoading = true
+
         })
       },
       initialiseUserData() {
@@ -268,7 +291,23 @@
           this.setLoggedIn(true, web3.eth.defaultAccount)
         }
         this.setDefualt()
-
+      },
+      registerNewUser() {
+        this.BountyContract.methods.registerUser().send({
+          gas: 8000000
+        }).then(function (val, err) {
+          if (!err) {
+            tempThis.initialiseUserData()
+            this.isLoading = false
+            location.replace("/")
+          }
+        }).catch((err) => {
+          this.error(
+            "Something went wrong for the following reasons You cancelled the transaction You currently suspended for bad behaviour on the platform"
+          )
+          this.isLoading = false
+          location.reload()
+        })
       },
       resetItems() {
         this.SecureLS.removeAll()
@@ -304,7 +343,7 @@
         this.resetItems()
       },
       logIn() {
-        if (!this.getLoggedIn()) {
+        if (!this.getLoggedIn() && this.canLogin) {
           this.registerUser()
         }
       },

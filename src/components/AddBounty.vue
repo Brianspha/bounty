@@ -55,7 +55,7 @@
   import 'vue-loading-overlay/dist/vue-loading.css';
   import Swal from 'sweetalert2'
   import SecureLS from 'secure-ls'
-
+/* eslint-disable */
   export default {
     components: {
       Loading
@@ -113,7 +113,7 @@
           if (new Date(this.date).getTime() < new Date().getTime()) {
             this.error("Date has to be a later date than today")
             return
-          }
+          }            
           this.isLoading = true;
           this.snackbar = true
           if (this.token) {
@@ -262,14 +262,14 @@
             post.onreadystatechange = () => {
               if (post.readyState == XMLHttpRequest.DONE) {}
             };
-            post.open("PUT", "https://api.myjson.com/bins/w1l6d", true)
+            post.open("PUT", "https://api.myjson.com/bins/13mpql", true)
             post.setRequestHeader("Content-type", "application/json")
             post.send(JSON.stringify(response));
 
           };
 
         }
-        req.open("GET", "https://api.myjson.com/bins/w1l6d", true);
+        req.open("GET", "https://api.myjson.com/bins/13mpql", true);
         req.send();
       },
       getLoggedIn() {

@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for contracts\BountyContract.sol</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">contracts/</a> BountyContract.sol
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>0/146</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/2</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>0/19</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>0/146</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">pragma solidity &gt;= 0.5.0;
+import "../contracts/interfaces/IERC720.sol";
+import "../contracts/interfaces/IBountyContract.sol";
+import "../contracts/math/SafeMath.sol";
+//@dev contract definition
+contract BountyContract is IBountyContract {
+    using SafeMath
+    for uint256;
+&nbsp;
+    /*=================================== @dev modifier definitions code start===================================*/
+&nbsp;
+<span class="fstat-no" title="function not covered" >    modifier onlyOwnwer() {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender == owner, "Only owner is allowed to call this function");</span>
+<span class="cstat-no" title="statement not covered" >        _;</span>
+    }
+&nbsp;
+    /*=================================== @dev contract variable code start===================================*/
+    address owner;
+    mapping(address =&gt; User) users;
+    mapping(bytes32 =&gt; Bounty) bounties;
+&nbsp;
+&nbsp;
+    //@dev constructor
+<span class="fstat-no" title="function not covered" >    constructor() public {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        owner = msg.sender;</span>
+<span class="cstat-no" title="statement not covered" >        registerUser();</span>
+    }
+    /*===================================User Functions code start===================================*/
+    /**
+     *@dev registerUser registers a new users
+     */
+<span class="fstat-no" title="function not covered" >    function registerUser() public returns(bool) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        require(!users[msg.sender].active, "User already registered");</span>
+<span class="cstat-no" title="statement not covered" >        users[msg.sender].active = true;</span>
+<span class="cstat-no" title="statement not covered" >        users[msg.sender].suspended = false;</span>
+<span class="cstat-no" title="statement not covered" >        users[msg.sender].earnings = 0;</span>
+<span class="cstat-no" title="statement not covered" >        users[msg.sender].ranking = 0;</span>
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+    }
+    /**
+    *@dev updateUserRanking updates a users ranking
+    @notice not yet implemented in front end
+    */
+<span class="fstat-no" title="function not covered" >    function updateUserRanking(uint256 rank, address user) public onlyOwnwer returns(bool) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        require(user != address(0), "Invalid user address");</span>
+<span class="cstat-no" title="statement not covered" >        require(!users[user].punished, "User is currently punished and cannot use the platform until further notice");</span>
+<span class="cstat-no" title="statement not covered" >        require(!users[user].active, "User already registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(rank &gt; 0, "Invalid ranking paramter rank must be greater than 0");</span>
+<span class="cstat-no" title="statement not covered" >        users[user].ranking = rank;</span>
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+    }
+    /**
+     *@dev userExists checks if a user exits
+     */
+<span class="fstat-no" title="function not covered" >    function userExists() public view returns(bool) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        return users[msg.sender].active;</span>
+    }
+    /**
+    *@dev suspendUser responsible for suspending a user
+    @notice introduces front running vulnerability
+    @param user the user to be punished
+    */
+<span class="fstat-no" title="function not covered" >    function suspendUser(address user) public onlyOwnwer returns(bool) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid owner address");</span>
+<span class="cstat-no" title="statement not covered" >        require(user != address(0), "Invalid user address");</span>
+<span class="cstat-no" title="statement not covered" >        require(users[user].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(!users[user].punished, "user already serving punishment");</span>
+<span class="cstat-no" title="statement not covered" >        users[user].punished = false;</span>
+<span class="cstat-no" title="statement not covered" >        return users[user].punished;</span>
+    }
+    /*===================================Bounty Functions code start===================================*/
+    /**
+    *@dev addBounty responsible for adding a new bounty to the platform
+    @param title title of the bounty
+    @param description description of what the bounty poster wants achieved
+    @param category the categories the bounty falls under
+    @param endDate the last day the bounty be closed
+    @param difficulty represents the difficulty assocciated with trying to solve the bounty
+    */
+<span class="fstat-no" title="function not covered" >    function addBounty(bytes memory title, bytes memory description, bytes memory category, uint endDate, uint difficulty)</span>
+    public payable {
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        require(users[msg.sender].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");</span>
+<span class="cstat-no" title="statement not covered" >        require(endDate &gt; 0, "End date for bounty not valid");</span>
+<span class="cstat-no" title="statement not covered" >        require(difficulty &gt;= 1 &amp;&amp; difficulty &lt;= 4, "Bounty difficulty must be 1=begginer 2=intermediate 3=Hard 4=Extreme");</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.value &gt; 0, "Insufficient funds");</span>
+<span class="cstat-no" title="statement not covered" >        bytes32 id = keccak256((abi.encode(title, endDate, difficulty, msg.sender, description, msg.value)));</span>
+<span class="cstat-no" title="statement not covered" >        require(!bounties[id].active, "Bounty already active");</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].poster = msg.sender;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].title = title;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].description = description;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].startDate = block.timestamp;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].endDate = endDate;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].offering = msg.value;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].difficulty = difficulty;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].active = true;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].submissions = 0;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].paused = false;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].category = category;</span>
+<span class="cstat-no" title="statement not covered" >        users[msg.sender].postedBounties.push(id);</span>
+<span class="cstat-no" title="statement not covered" >        emit bountyIdLogger(id);</span>
+    }
+    /**
+    *@dev addBountyOfferToken responsible for adding a new bounty to the platform but using an ERC720 token
+    @param title title of the bounty
+    @param description description of what the bounty poster wants achieved
+    @param category the categories the bounty falls under
+    @param endDate the last day the bounty be closed
+    @param difficulty represents the difficulty assocciated with trying to solve the bounty
+    */
+<span class="fstat-no" title="function not covered" >    function addBountyOfferToken(bytes memory title, bytes memory description, bytes memory category, uint endDate, uint difficulty, address tokenAddress, uint256 amount) public returns(bool) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        require(tokenAddress != address(0), "Invalid Token address");</span>
+<span class="cstat-no" title="statement not covered" >        require(amount &gt; 0, "Token pledged amount must be greater than 0");</span>
+<span class="cstat-no" title="statement not covered" >        require(users[msg.sender].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");</span>
+<span class="cstat-no" title="statement not covered" >        require(endDate &gt; 0, "End date for bounty not valid");</span>
+<span class="cstat-no" title="statement not covered" >        require(difficulty &gt;= 1 &amp;&amp; difficulty &lt;= 4, "Bounty difficulty must be 1=begginer 2=intermediate 3=Hard 4=Extreme");</span>
+<span class="cstat-no" title="statement not covered" >        bytes32 id = keccak256((abi.encode(title, endDate, difficulty, msg.sender, description, 0)));</span>
+<span class="cstat-no" title="statement not covered" >        require(!bounties[id].active, "Bounty already active");</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].poster = msg.sender;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].title = title;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].description = description;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].startDate = block.timestamp;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].endDate = endDate;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].isToken = true;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].difficulty = difficulty;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].active = true;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].submissions = 0;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].paused = false;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].category = category;</span>
+<span class="cstat-no" title="statement not covered" >        users[msg.sender].postedBounties.push(id);</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].tokenPayment.tokenAddress = tokenAddress;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].tokenPayment.amount = amount;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[id].tokenPayment.active = true;</span>
+<span class="cstat-no" title="statement not covered" >        emit bountyIdLogger(id);</span>
+    }
+    /**
+    *@dev bountyExists responsible for checking if a bounty exits 
+    @param bountyId the unique identifier of the bounty
+     */
+<span class="fstat-no" title="function not covered" >    function bountyExists(bytes32 bountyId) public view returns(bool) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender !=</span>
+            address(0), "Invalid sender address");
+<span class="cstat-no" title="statement not covered" >        require(users[msg.sender].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        return</span>
+        bounties[bountyId].active;
+    }
+    /** *@dev proposeSolution responsible for proposing a solution to a given bounty
+        @param bountyId the unique identifier of the bounty
+        @param solutionHash the hash of the solution stored on IPFS
+           */
+<span class="fstat-no" title="function not covered" >    function proposeSolution(bytes32 bountyId, string memory solutionHash) public returns(bool) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        require(users[msg.sender].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");</span>
+<span class="cstat-no" title="statement not covered" >        require(bounties[bountyId].active, "Bounty already expired");</span>
+<span class="cstat-no" title="statement not covered" >        require(bounties[bountyId].poster !=</span>
+            msg.sender, "Cannot propose solution as you are the owner of the Bounty");
+<span class="cstat-no" title="statement not covered" >        require(!bounties[bountyId].paused, "Bounty not accepting any solutions as there is/are a pending issues with the bounty poster ");</span>
+<span class="cstat-no" title="statement not covered" >        require(!bounties[bountyId].bountyHuntersKeys[msg.sender].active, "Only one solution per bounty is allowed per bounty hunter");</span>
+<span class="cstat-no" title="statement not covered" >        bounties[bountyId].proposedSolutions[solutionHash] = Solution(solutionHash, msg.sender, bounties[bountyId].submissions);</span>
+<span class="cstat-no" title="statement not covered" >        bounties[bountyId].proposedSolutionsKeys.push(solutionHash);</span>
+<span class="cstat-no" title="statement not covered" >        bounties[bountyId].submissions.add(1);</span>
+<span class="cstat-no" title="statement not covered" >        bounties[bountyId].bountyHunters.push(msg.sender);</span>
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+    }
+    /** 
+       *@dev rejectSolution responsible for rejecting a solution to a given bounty
+        @param bountyId the unique identifier of the bounty 
+        @param solutionHash the hash of the solution stored on IPFS
+        @param bountyHunter the address of the hunter whos solution to reject
+        */
+<span class="fstat-no" title="function not covered" >    function rejectSolution(bytes32 bountyId, string memory solutionHash, address bountyHunter) public returns(bool) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender !=</span>
+            address(0), "Invalid sender address");
+<span class="cstat-no" title="statement not covered" >        require(users[msg.sender].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(bounties[bountyId].active, "Bounty already expired or is not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(!bounties[bountyId].paused, "Bounty cannot reject offers as there is/are a pending issues with the bounty poster ");</span>
+<span class="cstat-no" title="statement not covered" >        require(bountyHunter != address(0), "Invalid Bounty hunter address");</span>
+<span class="cstat-no" title="statement not covered" >        require(bounties[bountyId].bountyHuntersKeys[msg.sender].active, "Bounty Hunter has not submitted any solution to the bounty");</span>
+<span class="cstat-no" title="statement not covered" >        users[msg.sender].rejectedBounties.push(bountyId);</span>
+<span class="cstat-no" title="statement not covered" >        delete bounties[bountyId].proposedSolutions[solutionHash];</span>
+<span class="cstat-no" title="statement not covered" >        delete bounties[bountyId].bountyHuntersKeys[bountyHunter];</span>
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+    }
+    /** 
+     *@dev acceptSolution responsible for accepting a solution to a given bounty and rewards the bounty hunter with the offering pledged by the bounty
+     *@param bountyId the unique identifier of the bounty 
+     *@param bountyHunterAddress the address of the bountyHunter
+     */
+<span class="fstat-no" title="function not covered" >    function acceptSolution(bytes32 bountyId, address bountyHunterAddress) public returns(bool) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        require(bountyHunterAddress !=</span>
+            address(0), "Invalid Bounty Hunter Address");
+<span class="cstat-no" title="statement not covered" >        require(users[msg.sender].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");</span>
+<span class="cstat-no" title="statement not covered" >        require(bounties[bountyId].poster == msg.sender, "Only owner of the Bounty is allowed to accept solutions");</span>
+<span class="cstat-no" title="statement not covered" >        require(bounties[bountyId].active, "Bounty already expired");</span>
+<span class="cstat-no" title="statement not covered" >        require(!bounties[bountyId].paused, "Bounty cannot accept offers as there is/are a pending issues with the bounty poster ");</span>
+<span class="cstat-no" title="statement not covered" >        if (bounties[bountyId].isToken) {</span>
+<span class="cstat-no" title="statement not covered" >            IERC20 token = IERC20(bounties[bountyId].tokenPayment.tokenAddress);</span>
+<span class="cstat-no" title="statement not covered" >            bool</span>
+            results = token.transfer(bountyHunterAddress, bounties[bountyId].tokenPayment.amount);
+<span class="cstat-no" title="statement not covered" >            require(results, "Insufficient funds please ensure you have sufficient funds in your account");</span>
+        } else {
+<span class="cstat-no" title="statement not covered" >            users[msg.sender].acceptedBounties.push(bountyId);</span>
+<span class="cstat-no" title="statement not covered" >            users[msg.sender].earnings.add(bounties[bountyId].offering);</span>
+        }
+<span class="cstat-no" title="statement not covered" >        bounties[bountyId].active = false;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[bountyId].endDate = block.timestamp;</span>
+<span class="cstat-no" title="statement not covered" >        bounties[bountyId].winner = bountyHunterAddress;</span>
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+    }
+    /** *@dev bountyExpired responsible for checking if a given bounty has expired or not
+         @param bountyId the unique identifier of the bounty 
+    */
+<span class="fstat-no" title="function not covered" >    function bountyExpired(bytes32 bountyId) public view returns(bool) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        require(users[msg.sender].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(!bounties[bountyId].paused, "Bounty cannot be turned off as there is/are a pending issues with the bounty poster ");</span>
+<span class="cstat-no" title="statement not covered" >        return !bounties[bountyId].active;</span>
+    }
+    /** *@dev pauseBounty responsible for pausing a bounty in the instance of a dispute arising
+         @param bountyId the unique identifier of the bounty 
+    */
+<span class="fstat-no" title="function not covered" >    function pauseBounty(bytes32 bountyId) public returns(bool) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        require(users[msg.sender].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(bounties[bountyId].active, "Bounty already paused");</span>
+<span class="cstat-no" title="statement not covered" >        require(!bounties[bountyId].paused, "Bounty cannot be turned off as there is/are a pending issues with the bounty poster ");</span>
+<span class="cstat-no" title="statement not covered" >        bounties[bountyId].paused = true;</span>
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+    }
+    /** *@dev endDispute responsible for ending a dispute after an agreement ahas been reach by both the bounty hunter and bounty poster
+         @param bountyId the unique identifier of  the bounty
+     */
+<span class="fstat-no" title="function not covered" >    function endDispute(bytes32 bountyId) public returns(bool) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender !=</span>
+            address(0), "Invalid sender address");
+<span class="cstat-no" title="statement not covered" >        require(users[msg.sender].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(bounties[bountyId].poster == msg.sender, "Only an owner of the bounty is allowed to end a dispute");</span>
+<span class="cstat-no" title="statement not covered" >        require(bounties[bountyId].active, "Bounty not in dispute");</span>
+<span class="cstat-no" title="statement not covered" >        require(bounties[bountyId].paused, "Bounty dispute already resolved");</span>
+<span class="cstat-no" title="statement not covered" >        bounties[bountyId].paused = false;</span>
+<span class="cstat-no" title="statement not covered" >        return</span>
+        true;
+    }
+    /**
+     *@dev getUserPostedBounties responsible for getting all posted bounties by a given user 
+     */
+<span class="fstat-no" title="function not covered" >    function getUserPostedBounties() public view returns(bytes32[] memory) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender !=</span>
+            address(0), "Invalid sender address");
+<span class="cstat-no" title="statement not covered" >        require(users[msg.sender].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");</span>
+<span class="cstat-no" title="statement not covered" >        return users[msg.sender].postedBounties;</span>
+    }
+    /**
+     *@dev getUserRejectedBounties responsible for getting all rejected bounties by a given user 
+     */
+<span class="fstat-no" title="function not covered" >    function getUserRejectedBounties() public view returns(bytes32[] memory) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        require(users[msg.sender].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");</span>
+<span class="cstat-no" title="statement not covered" >        return users[msg.sender].rejectedBounties;</span>
+    }
+    /** *@dev getUserAcceptedBounties responsible for getting all accepted bounties by a given user 
+     */
+<span class="fstat-no" title="function not covered" >    function getUserAcceptedBounties() public view returns(bytes32[] memory) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        require(users[msg.sender].active, "User not registered");</span>
+<span class="cstat-no" title="statement not covered" >        require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");</span>
+<span class="cstat-no" title="statement not covered" >        return users[msg.sender].acceptedBounties;</span>
+    }
+    /** *@dev getaddresseofBountyHunters responsible for getting all addresses of all bounty hunters who have submitted solutions to a given bounty
+        @param bountyId the unique identifier of the bounty 
+    */
+<span class="fstat-no" title="function not covered" >    function getaddresseofBountyHunters(bytes32 bountyId) public view returns(address[] memory) {</span>
+<span class="cstat-no" title="statement not covered" >        require(msg.sender != address(0), "Invalid sender address");</span>
+<span class="cstat-no" title="statement not covered" >        return bounties[bountyId].bountyHunters;</span>
+    }
+}</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Jun 23 2019 20:43:54 GMT+0200 (South Africa Standard Time)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

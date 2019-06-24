@@ -1,4 +1,4 @@
-pragma solidity ^ 0.5 .0;
+pragma solidity >= 0.5.0;
 
 import "../interfaces/IERC720.sol";
 import "../math/SafeMath.sol";

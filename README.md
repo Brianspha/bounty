@@ -2,9 +2,11 @@
 
 ## Project setup
 ```
-npm install
+for local packages
+npm install 
 ```
-
+for gloabal packages
+npm install embark -g
 ### Compiles and hot-reloads for development
 ```
 npm run serve
@@ -20,10 +22,17 @@ embark build production
 ### Run your tests
 ```
 embark test 
+to check for gas details run 
+embark test ----gasDetails
+to check for which functions where executed during testing run 
+embark test --coverage
+for some reason run embark test without providing a node key fails could be my machine as a work around in the instance the tests fail on your machine please provide a node key see below
+
 ```
 Alternatively you could run
-embark run --node (your node address)
-
+embark test --node (your node address) i.e your ganache instance for example
+in full 
+embark test --http://localhost:8545  for e.g.
 
 
 ### Customize configuration
@@ -40,3 +49,10 @@ that I have already posted. By clicking on a bounty, I can review submissions th
 been proposed. I can accept or reject the submitted work. Accepting proposed work will
 pay the submitter the deposited amount.
 As a bounty hunter, I can submit work to a bounty for review.
+
+
+Payment with an  ERC720 token is not fully tested use at own risk
+using public IFPS gateways is quite slow ive the projects uses a local ipfs node however to connect to a public gateway just run
+
+embark run infura --nodashboard
+instead of running the defualt

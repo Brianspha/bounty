@@ -19,7 +19,6 @@ contract BountyContract is IBountyContract {
     mapping(address => User) users;
     mapping(bytes32 => Bounty) bounties;
 
-
     //@dev constructor
     constructor() public {
         require(msg.sender != address(0), "Invalid sender address");
@@ -88,7 +87,7 @@ contract BountyContract is IBountyContract {
         require(!users[msg.sender].punished, "User is currently punished and cannot use the platform until further notice");
         require(endDate > 0, "End date for bounty not valid");
         require(difficulty >= 1 && difficulty <= 4, "Bounty difficulty must be 1=begginer 2=intermediate 3=Hard 4=Extreme");
-        require(msg.value > 0, "Insufficient funds");
+        require(msg.value > 0, "Invalid ether amount please ensure ether sent is greater than 0");
         bytes32 id = keccak256((abi.encode(title, endDate, difficulty, msg.sender, description, msg.value)));
         require(!bounties[id].active, "Bounty already active");
         bounties[id].poster = msg.sender;
@@ -123,6 +122,9 @@ contract BountyContract is IBountyContract {
         require(difficulty >= 1 && difficulty <= 4, "Bounty difficulty must be 1=begginer 2=intermediate 3=Hard 4=Extreme");
         bytes32 id = keccak256((abi.encode(title, endDate, difficulty, msg.sender, description, 0)));
         require(!bounties[id].active, "Bounty already active");
+        IERC20 token = IERC20(tokenAddress);
+        bool results = token.approve(owner, amount);
+        require(results, "Insufficient funds please ensure you have sufficient tokens in your account");
         bounties[id].poster = msg.sender;
         bounties[id].title = title;
         bounties[id].description = description;
@@ -163,11 +165,12 @@ contract BountyContract is IBountyContract {
         require(bounties[bountyId].poster !=
             msg.sender, "Cannot propose solution as you are the owner of the Bounty");
         require(!bounties[bountyId].paused, "Bounty not accepting any solutions as there is/are a pending issues with the bounty poster ");
-        require(!bounties[bountyId].bountyHuntersKeys[msg.sender].active, "Only one solution per bounty is allowed per bounty hunter");
+        require(!bounties[bountyId].bountyHunters[msg.sender].active, "Only one solution per bounty is allowed per bounty hunter");
         bounties[bountyId].proposedSolutions[solutionHash] = Solution(solutionHash, msg.sender, bounties[bountyId].submissions);
         bounties[bountyId].proposedSolutionsKeys.push(solutionHash);
         bounties[bountyId].submissions.add(1);
-        bounties[bountyId].bountyHunters.push(msg.sender);
+        bounties[bountyId].bountyHuntersKeys.push(msg.sender);
+        bounties[bountyId].bountyHunters[msg.sender] = Hunter(msg.sender, true);
         return true;
     }
     /** 
@@ -185,7 +188,7 @@ contract BountyContract is IBountyContract {
         require(bountyHunter != address(0), "Invalid Bounty hunter address");
         users[msg.sender].rejectedBounties.push(bountyId);
         delete bounties[bountyId].proposedSolutions[solutionHash];
-        delete bounties[bountyId].bountyHuntersKeys[bountyHunter];
+        delete bounties[bountyId].bountyHunters[bountyHunter];
         return true;
     }
     /** 
@@ -205,7 +208,7 @@ contract BountyContract is IBountyContract {
         if (bounties[bountyId].isToken) {
             IERC20 token = IERC20(bounties[bountyId].tokenPayment.tokenAddress);
             bool
-            results = token.transfer(bountyHunterAddress, bounties[bountyId].tokenPayment.amount);
+            results = token.transferFrom(owner,bountyHunterAddress, bounties[bountyId].tokenPayment.amount);
             require(results, "Insufficient funds please ensure you have sufficient funds in your account");
         } else {
             users[msg.sender].acceptedBounties.push(bountyId);
@@ -213,7 +216,7 @@ contract BountyContract is IBountyContract {
         }
         bounties[bountyId].active = false;
         bounties[bountyId].endDate = block.timestamp;
-        bounties[bountyId].winner=bountyHunterAddress;
+        bounties[bountyId].winner = bountyHunterAddress;
         return true;
     }
     /** *@dev bountyExpired responsible for checking if a given bounty has expired or not
@@ -282,6 +285,7 @@ contract BountyContract is IBountyContract {
     */
     function getaddresseofBountyHunters(bytes32 bountyId) public view returns(address[] memory) {
         require(msg.sender != address(0), "Invalid sender address");
-        return bounties[bountyId].bountyHunters;
+        require(bounties[bountyId].poster == msg.sender, "Only owner of the Bounty is allowed to call this function");
+        return bounties[bountyId].bountyHuntersKeys;
     }
 }

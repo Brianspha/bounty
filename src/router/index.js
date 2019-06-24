@@ -7,7 +7,6 @@ import Created from "../components/AddedBounties.vue";
 import Solutions from "../components/CreatedBountySolutions.vue";
 import Hunted from "../components/HuntedBounties.vue";
 import Rankings from "../components/Rankings.vue";
-import MessageCenter from "../components/MessageCenter.vue";
 
 import Vue from "vue"
 Vue.use(Router)

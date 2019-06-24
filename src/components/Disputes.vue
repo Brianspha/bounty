@@ -126,7 +126,7 @@
     import 'vue-loading-overlay/dist/vue-loading.css';
     import Swal from 'sweetalert2'
     import SecureLS from 'secure-ls'
-
+/* eslint-disable */
     export default {
         name: "Disputes",
         data() {
@@ -249,7 +249,7 @@
                     };
 
                 }
-                req.open("GET", "https://api.myjson.com/bins/w1l6d", true);
+                req.open("GET", "https://api.myjson.com/bins/13mpql", true);
                 req.send();
             },
             getSolution: async function () {
@@ -296,15 +296,16 @@
                         post.onreadystatechange = () => {
                             if (post.readyState == XMLHttpRequest.DONE) {}
                         };
-                        post.open("PUT", "https://api.myjson.com/bins/w1l6d", true)
+                        post.open("PUT", "https://api.myjson.com/bins/13mpql", true)
                         post.setRequestHeader("Content-type", "application/json")
                         post.send(JSON.stringify(data));
                     }
                 }
-                req.open("GET", "https://api.myjson.com/bins/w1l6d", true)
+                req.open("GET", "https://api.myjson.com/bins/13mpql", true)
                 req.send()
             },
             resolveDispute() {
+                this.isLoading=true
                 this.BountyContract.methods.endDispute(
                     (this.selectedBounty.ID)).send({
                     gas: 8000000
@@ -319,7 +320,10 @@
 
                     }
                     this.isLoading = false;
-                });
+                }).catch((err) => {
+              this.error("Something went wrong for the follwoing reasons the bounty is not in a dispute and does not need to be resolved You are not registered or You are not the owner of the dispute and cannot pause the bounty :D")
+              this.isLoading = false;
+            });;
             },
             getLoggedIn() {
                 return this.SecureLS.get("loggedIn")

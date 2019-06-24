@@ -51,7 +51,18 @@ module.exports = {
   // used with "embark run livenet"
   livenet: {
   },
-
+infura:{
+  development: {
+    "enabled": true,
+    "upload":{
+      "provider": "ipfs",
+      "host": "ipfs.infura.io",
+      "port": 80,
+      "protocol": "https",
+      "getUrl": "https://ipfs.infura.io/ipfs/"
+    }
+  }
+}
   // you can name an environment with specific settings and then specify with
   // "embark run custom_name"
   //custom_name: {

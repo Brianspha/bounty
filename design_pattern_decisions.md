@@ -23,3 +23,8 @@ Access Restrictions
 I used this pattern to ensure that ony a bounty owner may end a dispute as well as ensure that certain requirements are met before anything related to a bounty or a user are fullfilled 
 Like in the instance when a user has to be punished from using the platform
 
+Mapping Itterator 
+I used this pattern to allow the itteration of several keys contained in the mappings on the contracts the indexes correspond between the mapping and the array
+
+Active Key 
+I used this pattern to check if a particular struct instance exists in a mapping

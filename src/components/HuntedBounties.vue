@@ -109,7 +109,7 @@
     import 'vue-loading-overlay/dist/vue-loading.css';
     import Swal from 'sweetalert2'
     import SecureLS from 'secure-ls'
-
+/* eslint-disable */
     export default {
         name: "HuntedBounties",
         data() {
@@ -172,7 +172,7 @@
             }
         },
         methods: {
-            handleSort(array, by) {
+                handleSort(array, by) {
                 return this.Sortvalue == "Value:Low to High" ? this.sortLowestToHighest(array, by) : this.Sortvalue ==
                     "Value:High to Low" ? this.sortHighestToLowest(array, by) : this.sortHighestToLowest(array, by)
             },
@@ -195,6 +195,7 @@
             },
             getBounties($state) {
                 let req = new XMLHttpRequest();
+                let tempThis=this
                 req.onreadystatechange = () => {
                     if (req.readyState == XMLHttpRequest.DONE) {
                         let response = JSON.parse(req.responseText)
@@ -203,7 +204,7 @@
                         } else {
                             for (var index = 1; index < response.length; index++) {
                                 var data = response[index]
-                                if (data.winner == this.address) {
+                                if (data.winner == tempThis.address) {
                                     this.Postedbounties.push({
                                         Heading: data.title,
                                         Description: data.description,
@@ -238,7 +239,7 @@
                     };
 
                 }
-                req.open("GET", "https://api.myjson.com/bins/w1l6d", true);
+                req.open("GET", "https://api.myjson.com/bins/13mpql", true);
                 req.send();
             },
             getSolution: async function () {
@@ -272,7 +273,7 @@
                 return this.SecureLS.get("loggedIn")
             },
             getAddress() {
-                return this.SecureLS.get("address")
+                return  this.SecureLS.get("address")
             },
             error(message) {
                 Swal.fire({

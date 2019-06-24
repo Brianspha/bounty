@@ -33,8 +33,8 @@
                         <v-card-title primary-title>
                             {{ShowingType}}
                             <v-flex class="text-truncate">
-                                    <v-icon color="black" x-small>perm_identity</v-icon>
-                                   {{bounty.Address!=null?bounty.Address:bounty.Poster}}
+                                <v-icon color="black" x-small>perm_identity</v-icon>
+                                {{bounty.Address!=null?bounty.Address:bounty.Poster}}
                             </v-flex>
                             <v-card-actions>
                                 <v-icon color="black" v-if="bounty.TotalEarnings!=null" x-small>monetization_on</v-icon>
@@ -78,7 +78,7 @@
     import {
         setTimeout
     } from 'timers';
-
+    /* eslint-disable */
     export default {
         name: "Rankings",
         data() {
@@ -159,7 +159,7 @@
 
                     };
                 }
-                req.open("GET", "https://api.myjson.com/bins/w1l6d", true);
+                req.open("GET", "https://api.myjson.com/bins/13mpql", true);
                 req.send();
             },
             daysRemaining(time) {
