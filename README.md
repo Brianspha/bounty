@@ -7,6 +7,8 @@ npm install
 ```
 for gloabal packages
 npm install embark -g
+```
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
@@ -56,3 +58,5 @@ using public IFPS gateways is quite slow ive the projects uses a local ipfs node
 
 embark run infura --nodashboard
 instead of running the defualt
+accessible via 
+# https://brianspha.github.io/BontyDApp/
