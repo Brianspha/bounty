@@ -16,7 +16,7 @@
     "dotenv": "^8.0.0",
     "embarkjs-connector-web3": "4.0.0",
     "epic-spinners": "^1.1.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "js-cookie": "^2.2.0",
     "magic-grid": "^3.2.4",
     "mdbvue": "^5.5.0",
