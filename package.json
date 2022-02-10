@@ -20,7 +20,7 @@
     "js-cookie": "^2.2.0",
     "magic-grid": "^3.2.4",
     "mdbvue": "^5.5.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "openzeppelin-solidity": "^2.3.0",
     "pg": "^7.11.0",
     "pify": "^4.0.1",
